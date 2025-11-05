@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": 1,
+    "userId": "5",
+    "productId": "10",
+    "quantity": "1",
+    "createdAt": "2025-11-05T08:00:09.018Z",
+    "updatedAt": "2025-11-05T08:00:09.018Z",
+    "deletedAt": null
+  }
+]
