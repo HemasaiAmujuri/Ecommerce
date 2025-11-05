@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router();
 
 const { register, login } = require('../controllers/users/userController');
-const { products, singleProduct }  = require("../controllers/products/products")
+const { products, singleProduct }  = require("../controllers/products/productsController")
 const { createShipping } = require("../controllers/shipping/shippingController")
 
 
