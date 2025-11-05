@@ -3,7 +3,6 @@ const path = require("path");
 
 const cartDataFile = path.join(__dirname, "../../data/cart.json");
 
-
 const loadCart = () => {
   if (!fs.existsSync(cartDataFile)) return [];
   const content = fs.readFileSync(cartDataFile, "utf8").trim();
@@ -16,7 +15,6 @@ const loadCart = () => {
   }
 };
 
-
 const saveCart = (data) => {
   fs.writeFileSync(cartDataFile, JSON.stringify(data, null, 2), "utf8");
 };
@@ -26,7 +24,6 @@ const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
 
-  
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,
@@ -60,11 +57,9 @@ const addToCart = async (req, res) => {
   }
 };
 
-
 const getCartByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId)
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -99,8 +94,72 @@ const getCartByUserId = async (req, res) => {
 };
 
 
+const updateCartItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Cart item id is required" });
+    }
+
+    const cartProducts = loadCart();
+    const cartIndex = cartProducts.findIndex((item) => item.id === Number(id) && item.deletedAt === null);
+
+    if (cartIndex === -1) {
+      return res.status(404).json({ success: false, message: "Cart item not found" });
+    }
+
+    if (quantity && quantity > 0) {
+      cartProducts[cartIndex].quantity = quantity;
+    }
+
+    cartProducts[cartIndex].updatedAt = new Date().toISOString();
+    saveCart(cartProducts);
+
+    res.status(200).json({
+      success: true,
+      data: cartProducts[cartIndex],
+      message: "Cart item updated successfully",
+    });
+  } catch (err) {
+    console.error("Update cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
+const deleteCartItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Cart item id is required" });
+    }
+
+    const cartProducts = loadCart();
+    const cartIndex = cartProducts.findIndex((item) => item.id === Number(id) && item.deletedAt === null);
+
+    if (cartIndex === -1) {
+      return res.status(404).json({ success: false, message: "Cart item not found" });
+    }
+
+    cartProducts[cartIndex].deletedAt = new Date().toISOString();
+    saveCart(cartProducts);
+
+    res.status(200).json({
+      success: true,
+      message: "Cart item deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 module.exports = {
   addToCart,
-  getCartByUserId
+  getCartByUserId,
+  updateCartItem,
+  deleteCartItem,
 };
