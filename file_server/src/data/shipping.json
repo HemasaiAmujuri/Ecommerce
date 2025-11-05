@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "userId": "10",
+    "name": "sai",
+    "email": "sai@gmail.com",
+    "address": "Hyderabad",
+    "createdAt": "2025-11-05T07:41:19.726Z",
+    "updatedAt": "2025-11-05T07:41:19.726Z",
+    "deletedAt": null
+  }
+]

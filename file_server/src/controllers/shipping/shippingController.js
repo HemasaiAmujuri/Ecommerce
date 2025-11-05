@@ -1,11 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "../shipping.json");
+const shippingDataFile = path.join(__dirname, "../../data/shipping.json");  
 
 
-const load = () => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, "utf8")) : []);
-const save = (data) => fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
+
+const load = () => (fs.existsSync(shippingDataFile) ? JSON.parse(fs.readFileSync(shippingDataFile, "utf8")) : []);
+const save = (data) => fs.writeFileSync(shippingDataFile, JSON.stringify(data, null, 2), "utf8");
 
 const createShipping = async (req, res) => {
   try {
@@ -32,7 +33,7 @@ const createShipping = async (req, res) => {
     res.status(201).json({
       success: true,
       data: newShipping,
-      message: "Shipping record created successfully",
+      message: "Data created successfully",
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
