@@ -8,5 +8,15 @@
     "createdAt": "2025-11-05T07:41:19.726Z",
     "updatedAt": "2025-11-05T07:41:19.726Z",
     "deletedAt": null
+  },
+  {
+    "id": 2,
+    "userId": "10",
+    "name": "sai",
+    "email": "sai@gmail.com",
+    "address": "Hyderabad",
+    "createdAt": "2025-11-05T14:06:50.885Z",
+    "updatedAt": "2025-11-05T14:06:50.887Z",
+    "deletedAt": null
   }
 ]
