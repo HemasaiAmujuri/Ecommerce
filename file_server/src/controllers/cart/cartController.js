@@ -149,7 +149,7 @@ const deleteCartItem = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Cart item deleted successfully",
+      message: "Cart product deleted successfully",
     });
   } catch (err) {
     console.error("Delete cart error:", err);
