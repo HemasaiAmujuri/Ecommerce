@@ -6,15 +6,10 @@ const PRODUCTS_FILE = path.join(__dirname, "../../data/products.json");
 
 const products = async(req,res) => {
     try{
-        const { category } = req.params;
+        
         const data = await fs.readFile(PRODUCTS_FILE, "utf-8");
         const products = JSON.parse(data);
-        let filteredProducts = products
-        if(category){
-            filteredProducts = products.filter((product) => product.category.toLowerCase() === category.toLowerCase()
-      );
-        }
-        return res.status(200).json({ success : true, data : filteredProducts, message : "Data Retrieved successfully"})
+        return res.status(200).json({ success : true, data : products, message : "Data Retrieved successfully"})
     }catch(err){
         return res.status(500).json({ success : false, message : "failed to retrieve products" })
     }

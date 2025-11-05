@@ -1,16 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/LoginPage.css";
 
 function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
-  const handleLogin = (e) => {
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("/products");
+
+    try {
+      const response = await fetch("http://localhost:4000/api/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Response:", data);
+
+      if (response.ok) {
+        // alert("Login successful!");
+        navigate("/products");
+      } else {
+        alert(data.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
 
   return (
-
     <div className="hero">
       <div className="login-page">
         <div className="login-box">
@@ -20,21 +48,35 @@ function LoginPage() {
           <form onSubmit={handleLogin}>
             <div className="input-group">
               <label>Email</label>
-              <input type="email" placeholder="Enter your email"   pattern="^[^@]+@[^@]*\.[^@]+$"
-           title="Email must contain at least one dot (.) after the '@' symbol."required />
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
+
             <div className="input-group">
               <label>Password</label>
-              <input type="password" placeholder="Enter your password" minLength="8" required />
+              <input
+                type="password"
+                placeholder="Enter your password"
+                // minLength="8"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
-            <button type="submit" className="login-btn" >Login</button>
 
-            
-
+            <button type="submit" className="login-btn">
+              Login
+            </button>
           </form>
 
-          <span className="signUp"> Dont have an account <Link to= "/signUp"> sign up </Link></span>
-            
+          <span className="signUp">
+            Don't have an account? <Link to="/signUp">Sign up</Link>
+          </span>
         </div>
       </div>
     </div>
