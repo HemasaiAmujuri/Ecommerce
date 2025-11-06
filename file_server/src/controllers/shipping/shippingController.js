@@ -3,8 +3,6 @@ const path = require("path");
 
 const shippingDataFile = path.join(__dirname, "../../data/shipping.json");  
 
-
-
 const load = () => (fs.existsSync(shippingDataFile) ? JSON.parse(fs.readFileSync(shippingDataFile, "utf8")) : []);
 const save = (data) => fs.writeFileSync(shippingDataFile, JSON.stringify(data, null, 2), "utf8");
 

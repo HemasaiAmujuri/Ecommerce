@@ -52,5 +52,113 @@
     "createdAt": "2025-11-05T13:47:12.784Z",
     "updatedAt": "2025-11-05T13:47:12.784Z",
     "deletedAt": null
+  },
+  {
+    "id": 7,
+    "userId": 8,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:22.537Z",
+    "updatedAt": "2025-11-06T08:17:22.537Z",
+    "deletedAt": null
+  },
+  {
+    "id": 8,
+    "userId": 8,
+    "productId": "6",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:28.942Z",
+    "updatedAt": "2025-11-06T08:17:28.942Z",
+    "deletedAt": null
+  },
+  {
+    "id": 9,
+    "userId": 8,
+    "productId": "8",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:30.759Z",
+    "updatedAt": "2025-11-06T08:17:30.760Z",
+    "deletedAt": null
+  },
+  {
+    "id": 10,
+    "userId": 8,
+    "productId": "10",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:33.718Z",
+    "updatedAt": "2025-11-06T08:17:33.719Z",
+    "deletedAt": null
+  },
+  {
+    "id": 11,
+    "userId": 8,
+    "productId": "12",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:35.151Z",
+    "updatedAt": "2025-11-06T08:17:35.151Z",
+    "deletedAt": null
+  },
+  {
+    "id": 12,
+    "userId": 8,
+    "productId": "12",
+    "quantity": 1,
+    "createdAt": "2025-11-06T08:17:36.262Z",
+    "updatedAt": "2025-11-06T08:17:36.264Z",
+    "deletedAt": null
+  },
+  {
+    "id": 13,
+    "userId": 1,
+    "productId": "3",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:52:41.074Z",
+    "updatedAt": "2025-11-06T09:52:41.074Z",
+    "deletedAt": null
+  },
+  {
+    "id": 14,
+    "userId": 1,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:52:41.904Z",
+    "updatedAt": "2025-11-06T09:52:41.905Z",
+    "deletedAt": null
+  },
+  {
+    "id": 15,
+    "userId": 1,
+    "productId": "7",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:52:43.576Z",
+    "updatedAt": "2025-11-06T09:52:43.577Z",
+    "deletedAt": null
+  },
+  {
+    "id": 16,
+    "userId": 1,
+    "productId": "6",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:55:03.632Z",
+    "updatedAt": "2025-11-06T09:55:03.632Z",
+    "deletedAt": null
+  },
+  {
+    "id": 17,
+    "userId": 1,
+    "productId": "7",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:55:04.608Z",
+    "updatedAt": "2025-11-06T09:55:04.609Z",
+    "deletedAt": null
+  },
+  {
+    "id": 18,
+    "userId": 1,
+    "productId": "8",
+    "quantity": 1,
+    "createdAt": "2025-11-06T09:55:05.958Z",
+    "updatedAt": "2025-11-06T09:55:05.958Z",
+    "deletedAt": null
   }
 ]

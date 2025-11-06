@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const cartDataFile = path.join(__dirname, "../../data/cart.json");
+const productsDataFile = path.join(__dirname, "../../data/products.json");
 
 const loadCart = () => {
   if (!fs.existsSync(cartDataFile)) return [];
@@ -14,6 +15,13 @@ const loadCart = () => {
     return [];
   }
 };
+
+
+const loadProducts = () => {
+  if (!fs.existsSync(productsDataFile)) return [];
+  const content = fs.readFileSync(productsDataFile, "utf-8");
+  return JSON.parse(content);
+}
 
 const saveCart = (data) => {
   fs.writeFileSync(cartDataFile, JSON.stringify(data, null, 2), "utf8");
@@ -70,7 +78,7 @@ const getCartByUserId = async (req, res) => {
     const cartProducts = loadCart();
 
     const userCart = cartProducts.filter(
-      (item) => String(item.userId) === String(userId) && item.deletedAt === null
+      (item) => Number(item.userId) === Number(userId) && item.deletedAt === null
     );
 
     if (userCart.length === 0) {
@@ -81,9 +89,23 @@ const getCartByUserId = async (req, res) => {
       });
     }
 
+    const allProducts = loadProducts();
+
+    const detailedCart = userCart.map((cartItem) => {
+      const product = allProducts.find(
+        (p) => Number(p.id) === Number(cartItem.productId)
+      );
+
+      return {
+        ...cartItem,
+        product: product || null, // attach product details if found
+      };
+    });
+
     res.status(200).json({
       success: true,
-      data: userCart,
+      message: "Cart items fetched successfully",
+      data: detailedCart,
     });
   } catch (err) {
     res.status(500).json({
@@ -92,6 +114,10 @@ const getCartByUserId = async (req, res) => {
     });
   }
 };
+
+module.exports = { getCartByUserId };
+
+
 
 
 const updateCartItem = async (req, res) => {

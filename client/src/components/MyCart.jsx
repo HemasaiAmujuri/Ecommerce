@@ -1,7 +1,6 @@
 import "../styles/MyCart.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 
 function MyCart() {
@@ -13,41 +12,25 @@ function MyCart() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadCartFromStorage = async () => {
+    const loadCartProducts = async () => {
       try {
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-        if (cartItems.length === 0) {
-          setCartProducts([]);
-          setQuantities({});
-          return;
-        }
-
-        const response = await axios.get("https://dummyjson.com/products?limit=194");
-
-        const filteredProducts = response.data.products.filter(product =>
-          cartItems.some(cartItem => Number(cartItem.id) === product.id)
-        );
-
-        setCartProducts(filteredProducts);
-
-        const quantitiesFromStorage = {};
-        cartItems.forEach(item => {
-          quantitiesFromStorage[item.id] = Number(item.quantity) || 1;
-        });
-        setQuantities(quantitiesFromStorage);
+        const userId = localStorage.getItem("userId") ?? ""
+        const response = await fetch(`http://localhost:4000/api/cart/getCartByUserId/${userId}`);
+        const data = await response.json();
+        setCartProducts(data.data)
+      
       } catch (err) {
         console.log("Error loading cart:", err);
       }
     };
 
-    loadCartFromStorage();
+    loadCartProducts();
   }, []);
 
   useEffect(() => {
     const totalPrice = cartProducts.reduce((total, product) => {
       const quantity = quantities[product.id] || 1;
-      return total + product.price * quantity;
+      return total + product.product?.price * quantity;
     }, 0);
     setTotal(totalPrice);
   }, [cartProducts, quantities]);
@@ -125,7 +108,7 @@ function MyCart() {
     setShowPopup(false);
     setProductToDelete(null);
   };
-
+  
   if (cartProducts.length === 0) {
     return <div className="no-products"><b>No items found in your cart.</b></div>;
   }
@@ -152,13 +135,13 @@ function MyCart() {
               >
                 <div className="product-image">
                   <img
-                    src={product.thumbnail || product.images?.[0]}
-                    alt={product.title}
+                    src={product?.product?.thumbnail || product?.product?.img?.[0]}
+                    alt={product?.product?.title}
                     height="150px"
                     width="150px"
                   />
                 </div>
-                <p className="title">{product.title}</p>
+                <p className="title">{product?.product?.title}</p>
               </div>
 
               <div className="cart-count">
@@ -172,7 +155,7 @@ function MyCart() {
               </div>
 
               <div className="price-trash-container">
-                <p>&#8377;{Math.round(product.price * quantity)}</p>
+                <p>&#8377;{Math.round(product?.product?.price * quantity)}</p>
                 <FaTrash
                   className="remove-icon"
                   onClick={() => confirmDelete(product.id)}
