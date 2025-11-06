@@ -97,19 +97,28 @@ export default function ProductList() {
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const storeItems = (product) => {
-    const existingCart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const itemIndex = existingCart.findIndex(item => item.id === product.id);
+  const userId = localStorage.getItem("userId") ?? ""
 
-    if (itemIndex >= 0) {
-      existingCart[itemIndex].quantity += 1;
-    } else {
-      existingCart.push({ id: product.id, quantity: 1 });
-    }
+  const storeItems = async(product) => {
+    try{
+    const response = await fetch("http://localhost:4000/api/cart/add-to-cart",{
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        productId : product.id,
+        userId : Number(userId),
+        quantity : 1
+      })
+    })
 
-    localStorage.setItem('cartItems', JSON.stringify(existingCart));
-    setAddedIds(prev => [...new Set([...prev, product.id])]);
+    const data = await response.json()
+    console.log("Response data", data)
+  }catch(err){
+    console.log("error",err.message)
   };
+}
 
   if (loading) return null;
 
