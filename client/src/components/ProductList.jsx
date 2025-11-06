@@ -16,19 +16,29 @@ export default function ProductList() {
 
 
   useEffect(() => {
-    setLoading(true);
-    fetch('https://dummyjson.com/products?limit=100')
-      .then(res => res.json())
-      .then(data => {
-        setAllProducts(data.products);
-        setProducts(data.products);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+  setLoading(true);
+
+  fetch('http://localhost:4000/api/products/all-products')
+    .then(res => res.json())
+    .then(data => {
+      console.log("Fetched data:", data);
+
+      if (data.success && Array.isArray(data.data)) {
+        setAllProducts(data.data);
+        setProducts(data.data);
+      } else {
+        console.error("Unexpected API response format:", data);
+        setAllProducts([]);
+        setProducts([]);
+      }
+
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      setLoading(false);
+    });
+}, []);
 
 
   useEffect(() => {
@@ -126,7 +136,7 @@ export default function ProductList() {
                 <Link to={`/products/${product.id}`} className="product-link">
                   <div className="product-image-container">
                     <img
-                      src={product.thumbnail || product.images?.[0]}
+                      src={product.thumbnail || product.img?.[0]}
                       alt={product.title}
                     />
                   </div>

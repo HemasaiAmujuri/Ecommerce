@@ -26,7 +26,7 @@ function MyCart() {
         const response = await axios.get("https://dummyjson.com/products?limit=194");
 
         const filteredProducts = response.data.products.filter(product =>
-          cartItems.some(cartItem => cartItem.id === product.id)
+          cartItems.some(cartItem => Number(cartItem.id) === product.id)
         );
 
         setCartProducts(filteredProducts);
@@ -96,13 +96,12 @@ function MyCart() {
     }
   };
 
-  // ✅ Triggered when trash icon clicked
+
   const confirmDelete = (productId) => {
     setProductToDelete(productId);
     setShowPopup(true);
   };
 
-  // ✅ Delete confirmed
   const handleConfirmeDelete = () => {
     if (!productToDelete) return;
 

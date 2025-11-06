@@ -63,7 +63,30 @@ function ShippingDetails() {
     return;
   }
 
-
+fetch('http://localhost:4000/api/shipping/add-shippingInfo', {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name,
+    email,
+    address
+  })
+})
+  .then((res) => {
+    if(!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+  
+    return res.json()
+  })
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((err) => {
+    console.error(err.message);
+  });
   localStorage.removeItem("cartItems");
   setCartItems([]);
   setConfirmed(true);
