@@ -27,6 +27,7 @@ function LoginPage() {
       console.log("Response:", data);
 
       if (response.ok) {
+        localStorage.setItem('userId', data.data.id)
         // alert("Login successful!");
         navigate("/products");
       } else {
