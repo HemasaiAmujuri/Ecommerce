@@ -36,9 +36,8 @@ function SignUpPage() {
 
       const data = await response.json();
       
-
       if (response.ok) {
-        // alert("Signup successful!");
+         localStorage.setItem('userId', data.data.id)
         navigate("/products");
       } else {
         alert(data.message || "Signup failed.");
