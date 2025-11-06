@@ -13,9 +13,13 @@ function ProductDetailsPage() {
     window.scrollTo(0, 0);
 
   
-    fetch(`https://dummyjson.com/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => setProduct(data))
+    fetch(`http://localhost:4000/api/products/singleProduct/${id}`)
+      .then((res) => 
+        res.json())
+      .then((data) => {
+        console.log("Fetched product data:", data)
+      setProduct(data.data)
+  })
       .catch((err) => console.error(err));
   }, [id]);
 
@@ -64,8 +68,8 @@ function ProductDetailsPage() {
       <div className="image-container">
         <img
           src={
-            product.images && product.images.length > 0
-              ? product.images[0]
+            product.img && product.img.length > 0
+              ? product.img[0]
               : ""
           }
           alt={product.title}
