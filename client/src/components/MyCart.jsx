@@ -35,49 +35,74 @@ function MyCart() {
     setTotal(totalPrice);
   }, [cartProducts, quantities]);
 
-  const handleIncrement = (productId) => {
-    setQuantities((prev) => {
-      const newQuantity = (prev[productId] || 1) + 1;
 
-      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const index = cartItems.findIndex(item => item.id === productId);
 
-      if (index !== -1) {
-        cartItems[index].quantity = newQuantity;
-      } else {
-        cartItems.push({ id: productId, quantity: newQuantity });
-      }
+const handleIncrement = async (productId) => {
+  const currentQuantity = quantities[productId] ?? 1;
+  const newQuantity = currentQuantity + 1;
+  setQuantities((prev) => ({
+    ...prev,
+    [productId]: newQuantity,
+  }));
 
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-      return {
-        ...prev,
-        [productId]: newQuantity,
-      };
+  try {
+    const response = await fetch(`http://localhost:4000/api/cart/updateCartProduct/${productId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: newQuantity }),
     });
-  };
 
-  const handleDecrement = (productId) => {
-    const currentQty = quantities[productId];
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
 
-    if (currentQty > 1) {
-      const updatedQuantities = {
-        ...quantities,
-        [productId]: currentQty - 1,
-      };
-
-      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const updatedCartItems = cartItems.map(item =>
-        item.id === productId ? { ...item, quantity: updatedQuantities[productId] } : item
-      );
-
-      localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-      setQuantities(updatedQuantities);
-    } else {
-      setProductToDelete(productId);
-      setShowPopup(true);
+    if (!response.ok) {
+      console.error("Server error:", data?.message || response.statusText);
+      return;
     }
-  };
+
+    console.log("Cart updated successfully:", data);
+  } catch (error) {
+    console.error("Error updating cart:", error);
+  }
+};
+
+
+  const handleDecrement = async (productId) => {
+    console.log(productId,"productId");
+  const currentQuantity = quantities[productId] ?? 1;
+
+  if (currentQuantity <= 1) return;
+
+  const newQuantity = currentQuantity - 1;
+
+  setQuantities((prev) => ({
+    ...prev,
+    [productId]: newQuantity,
+  }));
+
+  try {
+    const response = await fetch(
+      `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity: newQuantity }),
+      }
+    );
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+
+    if (!response.ok) {
+      console.error("Server error:", data?.message || response.statusText);
+      return;
+    }
+
+    console.log("Cart decremented successfully:", data);
+  } catch (error) {
+    console.error("Error decrementing cart:", error);
+  }
+};
 
 
   const confirmDelete = (productId) => {
@@ -85,21 +110,19 @@ function MyCart() {
     setShowPopup(true);
   };
 
-  const handleConfirmeDelete = () => {
+  const handleConfirmeDelete = async() => {
     if (!productToDelete) return;
 
     const productId = productToDelete;
 
-    const updatedQuantities = { ...quantities };
-    delete updatedQuantities[productId];
-    setQuantities(updatedQuantities);
-
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const updatedCart = cartItems.filter(item => item.id !== productId);
-    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-
-    const updatedCartProducts = cartProducts.filter(product => product.id !== productId);
-    setCartProducts(updatedCartProducts);
+    const response = await fetch(`http://localhost:4000/api/cart/deleteCartProduct/${productId}`,{
+      method  : "DELETE",
+      headers : {
+        "Content-Type" : "application/json"
+      }
+    });
+    const data = response.json();
+    console.log(data,"data");
 
     setShowPopup(false);
     setProductToDelete(null);
@@ -148,7 +171,7 @@ function MyCart() {
                 <button className="quantity" onClick={() => handleDecrement(product.id)}>
                   -
                 </button>
-                <div className="quantity-value">{quantity}</div>
+                <div className="quantity-value"> {quantities[product.id] ?? product.quantity}</div>
                 <button className="quantity" onClick={() => handleIncrement(product.id)}>
                   +
                 </button>
