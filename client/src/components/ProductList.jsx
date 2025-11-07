@@ -14,6 +14,7 @@ export default function ProductList() {
 
   const location = useLocation();
 
+  // 🧩 Fetch all products
   useEffect(() => {
     setLoading(true);
 
@@ -39,12 +40,17 @@ export default function ProductList() {
       });
   }, []);
 
-
+  // 🧩 Load cart items whenever location changes (fix)
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setAddedToCart(savedCart.map(item => item.productId));
-  }, []);
+    const loadCart = () => {
+      const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      setAddedToCart(savedCart.map(item => item.productId));
+    };
 
+    loadCart(); // Run immediately
+  }, [location.pathname]); // 👈 Trigger every time user navigates back
+
+  // 🧩 Filter products by category
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const category = params.get('category');
@@ -60,6 +66,7 @@ export default function ProductList() {
     }
   }, [location.search, allProducts]);
 
+  // 🧩 Filter products by search input
   useEffect(() => {
     if (searchInput.trim().length === 0) {
       setProducts(allProducts);
@@ -72,12 +79,13 @@ export default function ProductList() {
     }
   }, [searchInput, allProducts]);
 
+  // 🧩 Pagination
   const indexOfLast = currentPage * productsPerPage;
   const indexOfFirst = indexOfLast - productsPerPage;
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
- 
+  // 🧩 Add to cart
   const storeItems = async (productId) => {
     const userId = localStorage.getItem("userId");
 
@@ -105,10 +113,10 @@ export default function ProductList() {
       if (response.ok && data.success) {
         console.log("✅ Added to cart successfully");
 
-    
+        // Update UI instantly
         setAddedToCart((prev) => [...prev, productId]);
 
-      
+        // Update localStorage
         const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
         if (!existingCart.find(item => item.productId === productId)) {
           existingCart.push({ productId, quantity: 1 });
