@@ -1,0 +1,281 @@
+[
+  {
+    "id": 1,
+    "userId": 2,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-07T07:51:58.361Z",
+    "updatedAt": "2025-11-07T07:51:58.362Z",
+    "deletedAt": "2025-11-07T09:14:40.831Z"
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "productId": "5",
+    "quantity": 1,
+    "createdAt": "2025-11-07T07:51:59.107Z",
+    "updatedAt": "2025-11-07T07:51:59.108Z",
+    "deletedAt": "2025-11-07T09:14:40.831Z"
+  },
+  {
+    "id": 3,
+    "userId": 2,
+    "productId": "3",
+    "quantity": 1,
+    "createdAt": "2025-11-07T07:52:00.120Z",
+    "updatedAt": "2025-11-07T07:52:00.121Z",
+    "deletedAt": "2025-11-07T09:14:40.831Z"
+  },
+  {
+    "id": 4,
+    "userId": 2,
+    "productId": "2",
+    "quantity": 1,
+    "createdAt": "2025-11-07T07:52:00.850Z",
+    "updatedAt": "2025-11-07T07:52:00.851Z",
+    "deletedAt": "2025-11-07T09:14:40.831Z"
+  },
+  {
+    "id": 5,
+    "userId": 2,
+    "productId": "2",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:53.005Z",
+    "updatedAt": "2025-11-07T09:15:53.005Z",
+    "deletedAt": "2025-11-07T09:16:15.131Z"
+  },
+  {
+    "id": 6,
+    "userId": 2,
+    "productId": "3",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:53.748Z",
+    "updatedAt": "2025-11-07T09:15:53.749Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 7,
+    "userId": 2,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:55.031Z",
+    "updatedAt": "2025-11-07T09:15:55.032Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 8,
+    "userId": 2,
+    "productId": "5",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:55.566Z",
+    "updatedAt": "2025-11-07T09:15:55.567Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 9,
+    "userId": 2,
+    "productId": "10",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:57.223Z",
+    "updatedAt": "2025-11-07T09:15:57.225Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 10,
+    "userId": 2,
+    "productId": "9",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:57.927Z",
+    "updatedAt": "2025-11-07T09:15:57.928Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 11,
+    "userId": 2,
+    "productId": "8",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:58.689Z",
+    "updatedAt": "2025-11-07T09:15:58.689Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 12,
+    "userId": 2,
+    "productId": "7",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:15:59.176Z",
+    "updatedAt": "2025-11-07T09:15:59.177Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 13,
+    "userId": 2,
+    "productId": "12",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:16:00.701Z",
+    "updatedAt": "2025-11-07T09:16:00.702Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 14,
+    "userId": 2,
+    "productId": "13",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:16:01.108Z",
+    "updatedAt": "2025-11-07T09:16:01.109Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 15,
+    "userId": 2,
+    "productId": "14",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:16:01.748Z",
+    "updatedAt": "2025-11-07T09:16:01.749Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 16,
+    "userId": 2,
+    "productId": "15",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:16:02.430Z",
+    "updatedAt": "2025-11-07T09:16:02.431Z",
+    "deletedAt": "2025-11-07T09:16:33.950Z"
+  },
+  {
+    "id": 17,
+    "userId": 2,
+    "productId": "3",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:11.902Z",
+    "updatedAt": "2025-11-07T09:31:11.902Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 18,
+    "userId": 2,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:12.549Z",
+    "updatedAt": "2025-11-07T09:31:12.549Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 19,
+    "userId": 2,
+    "productId": "5",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:13.423Z",
+    "updatedAt": "2025-11-07T09:31:13.424Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 20,
+    "userId": 2,
+    "productId": "2",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:14.398Z",
+    "updatedAt": "2025-11-07T09:31:14.399Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 21,
+    "userId": 2,
+    "productId": "7",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:16.085Z",
+    "updatedAt": "2025-11-07T09:31:16.086Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 22,
+    "userId": 2,
+    "productId": "8",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:16.787Z",
+    "updatedAt": "2025-11-07T09:31:16.788Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 23,
+    "userId": 2,
+    "productId": "9",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:31:17.713Z",
+    "updatedAt": "2025-11-07T09:31:17.713Z",
+    "deletedAt": "2025-11-07T09:39:25.479Z"
+  },
+  {
+    "id": 24,
+    "userId": 2,
+    "productId": "2",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:47.800Z",
+    "updatedAt": "2025-11-07T09:41:47.800Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 25,
+    "userId": 2,
+    "productId": "3",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:48.634Z",
+    "updatedAt": "2025-11-07T09:41:48.635Z",
+    "deletedAt": "2025-11-07T09:42:18.093Z"
+  },
+  {
+    "id": 26,
+    "userId": 2,
+    "productId": "4",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:49.282Z",
+    "updatedAt": "2025-11-07T09:41:49.283Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 27,
+    "userId": 2,
+    "productId": "5",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:49.977Z",
+    "updatedAt": "2025-11-07T09:41:49.978Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 28,
+    "userId": 2,
+    "productId": "10",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:51.538Z",
+    "updatedAt": "2025-11-07T09:41:51.539Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 29,
+    "userId": 2,
+    "productId": "9",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:52.649Z",
+    "updatedAt": "2025-11-07T09:41:52.650Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 30,
+    "userId": 2,
+    "productId": "8",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:53.629Z",
+    "updatedAt": "2025-11-07T09:41:53.629Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  },
+  {
+    "id": 31,
+    "userId": 2,
+    "productId": "7",
+    "quantity": 1,
+    "createdAt": "2025-11-07T09:41:54.450Z",
+    "updatedAt": "2025-11-07T09:41:54.451Z",
+    "deletedAt": "2025-11-07T09:42:33.747Z"
+  }
+]

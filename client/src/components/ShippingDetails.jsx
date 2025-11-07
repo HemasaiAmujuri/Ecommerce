@@ -5,92 +5,91 @@ import "../styles/ShippingDetails.css";
 function ShippingDetails() {
   const [cartItems, setCartItems] = useState([]);
   const [confirmed, setConfirmed] = useState(false);
-
+  const [message, setMessage] = useState();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
 
+  const userId = localStorage.getItem("userId") ?? "";
+
   useEffect(() => {
-    
     window.scrollTo(0, 0);
 
-    const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-    if (storedItems.length === 0) return;
-
     const fetchProducts = async () => {
-      const productsData = await Promise.all(
-        storedItems.map(async (item) => {
-          try {
-            const res = await fetch(`https://dummyjson.com/products/${item.id}`);
-            const data = await res.json();
-            return {
-              ...data,
-              quantity: item.quantity || 1,
-            };
-          } catch (err) {
-            console.error(err);
-            return null;
-          }
-        })
-      );
-
-      const validProducts = productsData.filter((p) => p !== null);
-      setCartItems(validProducts);
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/cart/getCartByUserId/${userId}`
+        );
+        const data = await response.json();
+        setCartItems(data.data);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchProducts();
-  }, []);
+  }, [userId]);
 
   const getTotal = () => {
     return cartItems.reduce(
-      (total, item) => Math.ceil(total + (item.price || 0) * (item.quantity || 1)),
+      (total, item) =>
+        Math.ceil(total + (item?.product?.price || 0) * (item?.quantity || 1)),
       0
     );
   };
 
- const handleConfirmOrder = () => {
-  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  const handleConfirmOrder = async () => {
 
-  if (!cartItems.length) {
-    alert("Please add items to your cart");
-    return;
-  }
-
-  if (!name || !email || !address) {
-    alert("Please fill all the shipping information");
-    return;
-  }
-
-fetch('http://localhost:4000/api/shipping/add-shippingInfo', {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    name,
-    email,
-    address
-  })
-})
-  .then((res) => {
-    if(!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+    if (!cartItems.length) {
+      setMessage("Please add items to your cart");
+      setTimeout(() => setMessage(""), 1500);
+      return;
     }
-  
-    return res.json()
-  })
-  .then((data) => {
-    console.log(data);
-  })
-  .catch((err) => {
-    console.error(err.message);
-  });
-  localStorage.removeItem("cartItems");
-  setCartItems([]);
-  setConfirmed(true);
-};
+
+    if (!name || !email || !address || !userId) {
+      setMessage("Please fill all the shipping information");
+      setTimeout(() => setMessage(""), 1500);
+      return;
+    }
+
+    try {
+      const shippingRes = await fetch(
+        "http://localhost:4000/api/shipping/add-shippingInfo",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, address, userId }),
+        }
+      );
+
+      if (!shippingRes.ok)
+        throw new Error(`Shipping API error! status: ${shippingRes.status}`);
+      const shippingData = await shippingRes.json();
+      console.log("Shipping info saved:", shippingData);
+
+      setCartItems([]);
+      localStorage.removeItem("cartItems");
+
+      const cartRes = await fetch(
+        `http://localhost:4000/api/cart/deleteCartItemsByuserId/${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!cartRes.ok)
+        throw new Error(`Delete cart API error! status: ${cartRes.status}`);
+      const cartData = await cartRes.json();
+      console.log("Cart deleted:", cartData);
+
+      setConfirmed(true);
+    } catch (err) {
+      console.error("Order confirmation error:", err.message);
+      setMessage("Something went wrong. Please try again.");
+      setTimeout(() => setMessage(""), 2000);
+    }
+  };
 
   if (confirmed) {
     return (
@@ -105,7 +104,9 @@ fetch('http://localhost:4000/api/shipping/add-shippingInfo', {
             textAlign: "center",
           }}
         >
-          <h2 style={{ color: "green", fontSize: "28px", marginBottom: "20px" }}>
+          <h2
+            style={{ color: "green", fontSize: "28px", marginBottom: "20px" }}
+          >
             Thank you! Your order is confirmed.
           </h2>
           <Link
@@ -180,18 +181,18 @@ fetch('http://localhost:4000/api/shipping/add-shippingInfo', {
                   <li key={item.id} className="summary-item">
 
                     <img
-                      src={item.thumbnail || item.images?.[0]}
-                      alt={item.title}
+                      src={item?.product?.thumbnail || item?.product?.img?.[0]}
+                      alt={item?.product?.title}
                       className="summary-image"
                     />
-                    <span className="summary-title">{item.title}</span>
-                    <span className="summary-qty">Qty: {item.quantity}</span>
-                    <span className="summary-cost">
-                      ₹{Math.ceil(item.price * item.quantity)}
+                    <span className="summary-title">
+                      {item?.product?.title}
                     </span>
-                    
+                    <span className="summary-qty">Qty: {item?.quantity}</span>
+                    <span className="summary-cost">
+                      ₹{Math.ceil(item?.product?.price * item?.quantity)}
+                    </span>
                   </li>
-                  
                 ))}
               </ul>
             )}
@@ -202,6 +203,7 @@ fetch('http://localhost:4000/api/shipping/add-shippingInfo', {
           <button className="confirm-button" onClick={handleConfirmOrder}>
             Confirm Order
           </button>
+          {message && <div className="message-box">{message}</div>}
         </div>
       </div>
     </div>

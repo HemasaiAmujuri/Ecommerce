@@ -185,9 +185,50 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
+
+
+const deleteUserCartItems = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+
+    const cartProducts = loadCart();
+
+    const userCartItems = cartProducts.filter(
+      (item) => item.userId === Number(userId) && item.deletedAt === null
+    );
+
+    if (userCartItems.length === 0) {
+      return res.status(404).json({ success: false, message: "No cart items found for this user" });
+    }
+
+    const updatedCart = cartProducts.map((item) => {
+      if (item.userId === Number(userId) && item.deletedAt === null) {
+        return { ...item, deletedAt: new Date().toISOString() };
+      }
+      return item;
+    });
+
+    saveCart(updatedCart);
+
+    res.status(200).json({
+      success: true,
+      message: "All cart items for this user deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete user cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
 module.exports = {
   addToCart,
   getCartByUserId,
   updateCartItem,
   deleteCartItem,
+  deleteUserCartItems
 };
