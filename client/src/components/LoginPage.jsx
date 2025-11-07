@@ -27,8 +27,6 @@ function LoginPage() {
       });
 
       const data = await response.json();
-      console.log("Response:", data);
-
       if (response.ok) {
         localStorage.setItem('userId', data.data.id)
         setMessage("Login successful");
@@ -37,7 +35,10 @@ function LoginPage() {
         },1500)
         
       } else {
-        setMessage("Login failed, please try again later");
+        setMessage( data.message ?? "Login failed, please try again later");
+        setTimeout(() => {
+          setMessage("")
+        },3000);
       }
     } catch (error) {
       console.error("Error:", error);

@@ -48,7 +48,7 @@ function SignUpPage() {
         }, 1500);
         setTimeout(() => setMessage(""), 3000);
       } else {
-        setMessage("registration failed, please try again later");
+        setMessage( data?.message ?? "registration failed, please try again later");
       }
     } catch (error) {
       console.error("Error:", error);
