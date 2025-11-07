@@ -34,10 +34,10 @@ export default function Header() {
   const isCartPage = location.pathname === "/cart";
   const isProductPage = location.pathname === "/products";
 
-  // ✅ Updated cart count logic
+
   const updateCartCount = () => {
     const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    // If quantity exists, use it; else just count number of items
+
     const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     setCartCount(totalCount);
   };
