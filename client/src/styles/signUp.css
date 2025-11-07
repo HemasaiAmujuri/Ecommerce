@@ -153,3 +153,19 @@ body{
 .toggle-on:hover {
   color: #000;
 }
+
+
+.message-box {
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 14px;
+    color: "green"; 
+    margin-top: "80px"
+}

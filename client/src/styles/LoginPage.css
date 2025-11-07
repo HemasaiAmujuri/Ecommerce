@@ -117,3 +117,55 @@ body{
 .signup-text a:hover {
   text-decoration: underline;
 } 
+
+
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-on {
+  position: absolute;
+  right: 0px; 
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+
+.password {
+  width: 100%;
+  padding: 12px 36px 12px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.password:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+.toggle-on:hover {
+  color: #000;
+}
+
+
+.message-box {
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 14px;
+    color: "green"; 
+    margin-top: "80px"
+}

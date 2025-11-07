@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/signUp.css";
-import { FaEye, FaEyeSlash  } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function SignUpPage() {
   const [name, setName] = useState("");
@@ -11,15 +11,16 @@ function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmpassword, setShowConfirmpassword] = useState(false);
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
-  
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setMessage("Passwords does not match")
+      setTimeout(() => setMessage(""), 3000);
       return;
     }
 
@@ -40,10 +41,14 @@ function SignUpPage() {
       const data = await response.json();
       
       if (response.ok) {
-         localStorage.setItem('userId', (data.data.id))
-        navigate("/products");
+        localStorage.setItem("userId", data.data.id);
+        setMessage("registration successful");
+        setTimeout(() => {
+          navigate("/products");
+        }, 1500);
+        setTimeout(() => setMessage(""), 3000);
       } else {
-        alert(data.message || "Signup failed.");
+        setMessage("registration failed, please try again later");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -95,44 +100,46 @@ function SignUpPage() {
 
             <div className="input-group">
               <label>Password</label>
-              <div className = "password-wrapper">
-              <input
-                type= { showPassword ? "text" : "password" }
-                placeholder="Enter your password"
-                minLength="8"
-                value={password}
-                className="password"
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <span 
-                className="toggle-on"
-                onClick = {() => {
-                  setShowPassword(!showPassword)}}
-                  >
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  minLength="8"
+                  value={password}
+                  className="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span
+                  className="toggle-on"
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
-               </span>
-               </div>
+                </span>
+              </div>
             </div>
 
             <div className="input-group">
               <label>Confirm Password</label>
-              <div className = "password-wrapper">
-              <input
-                type= {showConfirmpassword ? "text" : "password" }
-                placeholder="Confirm your password"
-                minLength="8"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-              <span 
-                 className="toggle-on"
-                 onClick={ () => {
-                   setShowConfirmpassword(!showConfirmpassword)
-                 }}>
+              <div className="password-wrapper">
+                <input
+                  type={showConfirmpassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  minLength="8"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  className="toggle-on"
+                  onClick={() => {
+                    setShowConfirmpassword(!showConfirmpassword);
+                  }}
+                >
                   {showConfirmpassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+                </span>
               </div>
             </div>
 
@@ -144,6 +151,7 @@ function SignUpPage() {
           <span className="login">
             Already have an account? <Link to="/login">Login</Link>
           </span>
+          {message && <div className="message-box">{message}</div>}
         </div>
       </div>
     </div>

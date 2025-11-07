@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/LoginPage.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -28,14 +31,17 @@ function LoginPage() {
 
       if (response.ok) {
         localStorage.setItem('userId', data.data.id)
-        // alert("Login successful!");
-        navigate("/products");
+        setMessage("Login successful");
+        setTimeout(() => {
+          navigate("/products");
+        },1500)
+        
       } else {
-        alert(data.message || "Login failed. Please try again.");
+        setMessage("Login failed, please try again later");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong. Please try again later.");
+      setMessage("Login failed, please try again later");
     }
   };
 
@@ -60,14 +66,24 @@ function LoginPage() {
 
             <div className="input-group">
               <label>Password</label>
+              <div className="password-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 // minLength="8"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="password"
                 required
               />
+              <span
+                className="toggle-on"
+                onClick={() => {
+                  setShowPassword(!showPassword)
+                }}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye /> }
+              </span>
+              </div>
             </div>
 
             <button type="submit" className="login-btn">
@@ -78,6 +94,7 @@ function LoginPage() {
           <span className="signUp">
             Don't have an account? <Link to="/signUp">Sign up</Link>
           </span>
+           {message && <div className="message-box">{message}</div>}
         </div>
       </div>
     </div>
