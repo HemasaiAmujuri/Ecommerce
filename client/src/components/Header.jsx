@@ -16,7 +16,6 @@ export default function Header() {
     fetch('https://dummyjson.com/products/categories')
       .then(res => res.json())
       .then(data => {
-
         if (Array.isArray(data)) setCategories(data);
         else setCategories([]);
       })
@@ -26,21 +25,20 @@ export default function Header() {
       });
   }, []);
 
-
   const goToProducts = () => {
     navigate('/products');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const location = useLocation()
-
+  const location = useLocation();
   const isCartPage = location.pathname === "/cart";
-  const isProductPage = location.pathname === "/products"
+  const isProductPage = location.pathname === "/products";
 
-
+  // ✅ Updated cart count logic
   const updateCartCount = () => {
     const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    // If quantity exists, use it; else just count number of items
+    const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     setCartCount(totalCount);
   };
 
@@ -59,56 +57,51 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(updateCartCount, 1000); // Cart is updated for every second
+    const interval = setInterval(updateCartCount, 1000); // Cart is updated every second
     return () => clearInterval(interval);
   }, []);
-
 
   return (
     <header className="header">
       <div className="header-hero">
-
         <div className="header-left" onClick={goToProducts}>
           <img src={Logo} alt="logo" className="logo-img" />
           <h1 className="brand-name">Cartify</h1>
         </div>
 
-
         <div className="header-right">
           <nav className="nav-links">
-          {!isProductPage && ( <span onClick={goToProducts}>Products</span> )}
-           <div
-            className="dropdown"
-            onMouseEnter={() => setShowDropdown(true)}
-            onMouseLeave={() => setShowDropdown(false)}
-          >
-            <span className="dropdown-title">Categories ▾</span>
-            {showDropdown && Array.isArray(categories) && categories.length > 0 && (
-              <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={goToProducts}>
-                  All Products
-                </div>
-                {categories.map((cat, idx) => (
-                  <div
-                    key={idx}
-                    className="dropdown-item"
-                    onClick={() => {
-                  
-                      const categoryParam = (cat.slug || cat).toLowerCase().replace(/\s+/g, '-');
-                      navigate(`/products?category=${encodeURIComponent(categoryParam)}`);
-                      setShowDropdown(false);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-
-
-                  >
-                    {cat.name || cat}
+            {!isProductPage && (<span onClick={goToProducts}>Products</span>)}
+            <div
+              className="dropdown"
+              onMouseEnter={() => setShowDropdown(true)}
+              onMouseLeave={() => setShowDropdown(false)}
+            >
+              <span className="dropdown-title">Categories ▾</span>
+              {showDropdown && Array.isArray(categories) && categories.length > 0 && (
+                <div className="dropdown-menu">
+                  <div className="dropdown-item" onClick={goToProducts}>
+                    All Products
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  {categories.map((cat, idx) => (
+                    <div
+                      key={idx}
+                      className="dropdown-item"
+                      onClick={() => {
+                        const categoryParam = (cat.slug || cat).toLowerCase().replace(/\s+/g, '-');
+                        navigate(`/products?category=${encodeURIComponent(categoryParam)}`);
+                        setShowDropdown(false);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      {cat.name || cat}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
+
           {!isCartPage && (
             <Link to="/cart" className="cart-container">
               <img src={cartLogo} alt="cartlogo" className="icon-img" />
@@ -119,10 +112,11 @@ export default function Header() {
           <div className='profile-icon'> <FaUser /> </div>
 
           <div className='logout-container'>
-            <span className="logout-icon"><Link to="/login">  <AiOutlineLogout color="#333"/> </Link> </span>
+            <span className="logout-icon">
+              <Link to="/login"> <AiOutlineLogout color="#333" /> </Link>
+            </span>
             <Link to="/login" className="logout">Logout</Link>
           </div>
-
         </div>
       </div>
     </header>

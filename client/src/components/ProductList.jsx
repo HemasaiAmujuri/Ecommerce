@@ -7,63 +7,43 @@ export default function ProductList() {
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [addedIds, setAddedIds] = useState([]);
+  const [addedToCart, setAddedToCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState('');
   const productsPerPage = 15;
 
   const location = useLocation();
 
-
   useEffect(() => {
-  setLoading(true);
+    setLoading(true);
 
-  fetch('http://localhost:4000/api/products/all-products')
-    .then(res => res.json())
-    .then(data => {
-      console.log("Fetched data:", data);
+    fetch('http://localhost:4000/api/products/all-products')
+      .then(res => res.json())
+      .then(data => {
+        console.log("Fetched data:", data);
 
-      if (data.success && Array.isArray(data.data)) {
-        setAllProducts(data.data);
-        setProducts(data.data);
-      } else {
-        console.error("Unexpected API response format:", data);
-        setAllProducts([]);
-        setProducts([]);
-      }
+        if (data.success && Array.isArray(data.data)) {
+          setAllProducts(data.data);
+          setProducts(data.data);
+        } else {
+          console.error("Unexpected API response format:", data);
+          setAllProducts([]);
+          setProducts([]);
+        }
 
-      setLoading(false);
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-      setLoading(false);
-    });
-}, []);
-
-
-  useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const ids = cart.map(item => item.id);
-    setAddedIds(ids);
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'cartItems') {
-        const cart = JSON.parse(e.newValue) || [];
-        const ids = cart.map(item => item.id);
-        setAddedIds(ids);
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Fetch error:", err);
+        setLoading(false);
+      });
   }, []);
 
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    setAddedIds(cart.map(item => item.id));
-  }, [location]);
+    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setAddedToCart(savedCart.map(item => item.productId));
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -97,28 +77,50 @@ export default function ProductList() {
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const userId = localStorage.getItem("userId") ?? ""
+ 
+  const storeItems = async (productId) => {
+    const userId = localStorage.getItem("userId");
 
-  const storeItems = async(product) => {
-    try{
-    const response = await fetch("http://localhost:4000/api/cart/add-to-cart",{
-      method : "POST",
-      headers : {
-        "Content-Type" : "application/json"
-      },
-      body : JSON.stringify({
-        productId : product.id,
-        userId : Number(userId),
-        quantity : 1
-      })
-    })
+    if (!userId) {
+      alert("Please login before adding to cart");
+      return;
+    }
 
-    const data = await response.json()
-    console.log("Response data", data)
-  }catch(err){
-    console.log("error",err.message)
+    try {
+      const response = await fetch("http://localhost:4000/api/cart/add-to-cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: parseInt(userId),
+          productId: parseInt(productId),
+          quantity: 1,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Response data", data);
+
+      if (response.ok && data.success) {
+        console.log("✅ Added to cart successfully");
+
+    
+        setAddedToCart((prev) => [...prev, productId]);
+
+      
+        const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+        if (!existingCart.find(item => item.productId === productId)) {
+          existingCart.push({ productId, quantity: 1 });
+          localStorage.setItem("cartItems", JSON.stringify(existingCart));
+        }
+      } else {
+        console.error("❌ Failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
   };
-}
 
   if (loading) return null;
 
@@ -127,6 +129,8 @@ export default function ProductList() {
       <div className="search-container">
         <input
           type="text"
+          id="searchInput"
+          name="searchInput"
           placeholder="Search..."
           className="search-bar"
           value={searchInput}
@@ -152,12 +156,13 @@ export default function ProductList() {
                   <h3 className="product-title">{product.title}</h3>
                   <p className="product-price">&#8377;{product.price}</p>
                 </Link>
+
                 <button
                   className="add-btn"
-                  onClick={() => storeItems(product)}
-                  disabled={addedIds.includes(product.id)}
+                  onClick={() => storeItems(product.id)}
+                  disabled={addedToCart.includes(product.id)}
                 >
-                  {addedIds.includes(product.id) ? 'Added to Cart' : 'Add to Cart'}
+                  {addedToCart.includes(product.id) ? 'Added to Cart' : 'Add to Cart'}
                 </button>
               </div>
             ))}
