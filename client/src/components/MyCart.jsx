@@ -72,7 +72,9 @@ function MyCart() {
     console.log(productId, "productId");
     const currentQuantity = quantities[productId] ?? 1;
 
-    if (currentQuantity <= 1) return;
+    if (currentQuantity <= 1){
+      return confirmDelete(productId);
+    }
 
     const newQuantity = currentQuantity - 1;
 
@@ -127,6 +129,8 @@ function MyCart() {
     const data = response.json();
     console.log(data, "data");
 
+    setCartProducts((prev) => prev.filter((item) => item.id !== productId));
+
     setShowPopup(false);
     setProductToDelete(null);
   };
@@ -180,8 +184,7 @@ function MyCart() {
                 <button
                   className="quantity"
                   onClick={() => {
-  console.log("Decrement clicked for product:", product);
-  handleDecrement(product.id);
+  handleDecrement(product?.id);
 }}
 
                 >
@@ -193,7 +196,7 @@ function MyCart() {
                 </div>
                 <button
                   className="quantity"
-                  onClick={() => handleIncrement(product.id)}
+                  onClick={() => handleIncrement(product?.id)}
                 >
                   +
                 </button>
