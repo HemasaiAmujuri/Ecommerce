@@ -185,9 +185,108 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
+
+
+const deleteUserCartItems = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+
+    const cartProducts = loadCart();
+
+    const userCartItems = cartProducts.filter(
+      (item) => item.userId === Number(userId) && item.deletedAt === null
+    );
+
+    if (userCartItems.length === 0) {
+      return res.status(404).json({ success: false, message: "No cart items found for this user" });
+    }
+
+    const updatedCart = cartProducts.map((item) => {
+      if (item.userId === Number(userId) && item.deletedAt === null) {
+        return { ...item, deletedAt: new Date().toISOString() };
+      }
+      return item;
+    });
+
+    saveCart(updatedCart);
+
+    res.status(200).json({
+      success: true,
+      message: "All cart items for this user deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete user cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
+const addOrUpdateCartItem = async (req, res) => {
+  try {
+    const { userId, productId, quantity } = req.body;
+
+    if (!userId || !productId || !quantity || quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "userId, productId, and valid quantity are required",
+      });
+    }
+
+    const cartProducts = loadCart();
+    const existingIndex = cartProducts.findIndex(
+      (item) =>
+        item.userId === Number(userId) &&
+        item.productId === Number(productId) &&
+        item.deletedAt === null
+    );
+
+    if (existingIndex !== -1) {
+      cartProducts[existingIndex].quantity += Number(quantity);
+      cartProducts[existingIndex].updatedAt = new Date().toISOString();
+
+      saveCart(cartProducts);
+
+      return res.status(200).json({
+        success: true,
+        message: "Cart item quantity updated successfully",
+        data: cartProducts[existingIndex],
+      });
+    } else {
+      const newItem = {
+        userId: Number(userId),
+        productId: Number(productId),
+        quantity: Number(quantity),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        deletedAt: null,
+      };
+
+      cartProducts.push(newItem);
+      saveCart(cartProducts);
+
+      return res.status(201).json({
+        success: true,
+        message: "New product added to cart successfully",
+        data: newItem,
+      });
+    }
+  } catch (err) {
+    console.error("Add/Update cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
+
 module.exports = {
   addToCart,
   getCartByUserId,
   updateCartItem,
   deleteCartItem,
+  deleteUserCartItems,
+  addOrUpdateCartItem
 };

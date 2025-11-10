@@ -36,6 +36,7 @@ function MyCart() {
           );
           window.dispatchEvent(new Event("storage"));
         }
+        setCartProducts(data.data);
       } catch (err) {
         console.log("Error loading cart:", err);
       }
@@ -66,7 +67,23 @@ function MyCart() {
     );
     window.dispatchEvent(new Event("storage"));
   };
+  const handleIncrement = async (productId) => {
+    const currentQuantity = quantities[productId] ?? 1;
+    const newQuantity = currentQuantity + 1;
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: newQuantity,
+    }));
 
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quantity: newQuantity }),
+        }
+      );
 
   const handleIncrement = async (productId) => {
     const currentQuantity = quantities[productId] ?? 1;
@@ -94,6 +111,15 @@ function MyCart() {
         setCartProducts(updatedCart);
         updateLocalStorageCart(updatedCart);
       }
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!response.ok) {
+        console.error("Server error:", data?.message || response.statusText);
+        return;
+      }
+
+      console.log("Cart updated successfully:", data);
     } catch (error) {
       console.error("Error updating cart:", error);
     }
@@ -133,6 +159,44 @@ function MyCart() {
     }
   };
 
+  const handleDecrement = async (productId) => {
+    console.log(productId, "productId");
+    const currentQuantity = quantities[productId] ?? 1;
+
+    if (currentQuantity <= 1){
+      return confirmDelete(productId);
+    }
+
+    const newQuantity = currentQuantity - 1;
+
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: newQuantity,
+    }));
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quantity: newQuantity }),
+        }
+      );
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!response.ok) {
+        console.error("Server error:", data?.message || response.statusText);
+        return;
+      }
+
+      console.log("Cart decremented successfully:", data);
+    } catch (error) {
+      console.error("Error decrementing cart:", error);
+    }
+  };
 
   const confirmDelete = (productId) => {
     setProductToDelete(productId);
@@ -162,6 +226,19 @@ function MyCart() {
     } catch (err) {
       console.error("Error deleting cart item:", err);
     }
+    const response = await fetch(
+      `http://localhost:4000/api/cart/deleteCartProduct/${productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = response.json();
+    console.log(data, "data");
+
+    setCartProducts((prev) => prev.filter((item) => item.id !== productId));
 
     setShowPopup(false);
     setProductToDelete(null);
@@ -224,6 +301,20 @@ function MyCart() {
                 <button
                   className="quantity"
                   onClick={() => handleIncrement(product.id)}
+                  onClick={() => {
+  handleDecrement(product?.id);
+}}
+
+                >
+                  -
+                </button>
+                <div className="quantity-value">
+                  {" "}
+                  {quantities[product.id] ?? product.quantity}
+                </div>
+                <button
+                  className="quantity"
+                  onClick={() => handleIncrement(product?.id)}
                 >
                   +
                 </button>

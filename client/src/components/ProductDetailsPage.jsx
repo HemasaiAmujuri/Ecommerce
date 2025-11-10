@@ -7,6 +7,7 @@ function ProductDetailsPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
   
@@ -35,29 +36,22 @@ function ProductDetailsPage() {
 
   if (!product) return <p>Loading...</p>;
 
+    const userId = localStorage.getItem("userId") ?? ""
+  const handleAddToCart = async() => {
+       const response = await fetch(`http://localhost:4000/api/cart/addOrUpdateCartItem`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId,
+        productId : id,
+        quantity: quantity }),
+    });
 
-  const handleAddToCart = () => {
-
-    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-
-    const existingItemIndex = existingCart.findIndex(
-      (item) => item.id === product.id
-    );
-
-    if (existingItemIndex >= 0) {
- 
-      existingCart[existingItemIndex].quantity = quantity;
-    } else {
-     
-      existingCart.push({ id: product.id, quantity });
-    }
-
-   
-    localStorage.setItem("cartItems", JSON.stringify(existingCart));
-
-   
-    alert(`Added ${quantity} ${product.title}(s) to cart!`);
+    const data = await response.json();
+    setMessage(data?.message ?? "Product added and updated to cart")
+    setTimeout(()=>{
+      setMessage("")
+    },1500)
   };
 
 
@@ -92,7 +86,7 @@ function ProductDetailsPage() {
           <label>
             Quantity:
            <CustomDropdown
-  quantity={quantity}
+  quantity={product?.quantity ?? quantity}
   onQuantityChange={(newQty) => setQuantity(newQty)}
 />
 
@@ -102,6 +96,7 @@ function ProductDetailsPage() {
             Add to Cart
           </button>
         </div>
+        {message && <div className="message-box">{message}</div>}
       </div>
     </div>
   );

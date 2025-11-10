@@ -10,9 +10,9 @@ const createShipping = async (req, res) => {
   try {
     const { userId, name, email, address } = req.body;
 
-  //   if (!userId || !address ||!name || !email){
-  //     return res.status(400).json({ success: false, message: "Please enter required fields" });
-  // }
+       if (!userId || !address ||!name || !email){
+      return res.status(400).json({ success: false, message: "Please enter required fields" });
+  }
 
     const data = load();
     const newShipping = {
