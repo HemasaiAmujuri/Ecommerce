@@ -11,35 +11,44 @@ function MyCart() {
   const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    const loadCartProducts = async () => {
-      try {
-        const userId = localStorage.getItem("userId") ?? "";
-        const response = await fetch(
-          `http://localhost:4000/api/cart/getCartByUserId/${userId}`
-        );
-        const data = await response.json();
+  const loadCartProducts = async () => {
+    try {
+      const userId = localStorage.getItem("userId") ?? "";
+      const response = await fetch(
+        `http://localhost:4000/api/cart/getCartByUserId/${userId}`
+      );
+      const data = await response.json();
 
-        if (data.success && Array.isArray(data.data)) {
-          setCartProducts(data.data);
-          localStorage.setItem(
-            "cartItems",
-            JSON.stringify(
-              data.data.map((item) => ({
-                productId: item.productId,
-                quantity: item.quantity,
-              }))
-            )
-          );
-          window.dispatchEvent(new Event("storage"));
-        }
-      } catch (err) {
-        console.log("Error loading cart:", err);
-      }
-    };
+    if (data.success && Array.isArray(data.data)) {
+  setCartProducts(data.data);
 
-    loadCartProducts();
-  }, []);
+  const initialQuantities = {};
+  data.data.forEach((item) => {
+    initialQuantities[item.id] = item.quantity;
+  });
+  setQuantities(initialQuantities);
+
+  localStorage.setItem(
+    "cartItems",
+    JSON.stringify(
+      data.data.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }))
+    )
+  );
+  window.dispatchEvent(new Event("storage"));
+}
+    } catch (err) {
+      console.log("Error loading cart:", err);
+    }
+  };
+
+  loadCartProducts();
+}, []);
+
 
   useEffect(() => {
     const totalPrice = cartProducts.reduce((total, product) => {
@@ -95,22 +104,22 @@ function MyCart() {
     }
   };
 
-  const handleDecrement = async (productId) => {
-    const currentQuantity = quantities[productId] ?? 1;
+  const handleDecrement = async (product) => {
+    const currentQuantity = quantities[product?.id] ?? product?.quantity ?? 1;
     if (currentQuantity <= 1) {
-      confirmDelete(productId);
+      confirmDelete(product?.id);
       return;
     }
 
     const newQuantity = currentQuantity - 1;
     setQuantities((prev) => ({
       ...prev,
-      [productId]: newQuantity,
+      [product?.id]: newQuantity,
     }));
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
+        `http://localhost:4000/api/cart/updateCartProduct/${product?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -120,7 +129,7 @@ function MyCart() {
 
       if (response.ok) {
         const updatedCart = cartProducts.map((p) =>
-          p.id === productId ? { ...p, quantity: newQuantity } : p
+          p.id === product?.id ? { ...p, quantity: newQuantity } : p
         );
         setCartProducts(updatedCart);
         updateLocalStorageCart(updatedCart);
@@ -135,7 +144,6 @@ function MyCart() {
     setShowPopup(true);
   };
 
-  // Delete confirmed
   const handleConfirmDelete = async () => {
     if (!productToDelete) return;
 
@@ -165,7 +173,6 @@ function MyCart() {
     setProductToDelete(null);
   };
 
-  // Empty cart case
   if (cartProducts.length === 0) {
     return (
       <div className="no-products">
@@ -210,7 +217,7 @@ function MyCart() {
               <div className="cart-count">
                 <button
                   className="quantity"
-                  onClick={() => handleDecrement(product.id)}
+                  onClick={() => handleDecrement(product)}
                 >
                   -
                 </button>
