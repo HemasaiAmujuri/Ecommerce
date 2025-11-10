@@ -245,7 +245,7 @@ const addOrUpdateCartItem = async (req, res) => {
     );
 
     if (existingIndex !== -1) {
-      cartProducts[existingIndex].quantity += Number(quantity);
+      cartProducts[existingIndex].quantity = Number(quantity);
       cartProducts[existingIndex].updatedAt = new Date().toISOString();
 
       saveCart(cartProducts);
