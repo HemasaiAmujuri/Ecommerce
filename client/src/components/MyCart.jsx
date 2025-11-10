@@ -11,7 +11,7 @@ function MyCart() {
   const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
 
-
+  // Load cart from backend
   useEffect(() => {
     const loadCartProducts = async () => {
       try {
@@ -23,8 +23,6 @@ function MyCart() {
 
         if (data.success && Array.isArray(data.data)) {
           setCartProducts(data.data);
-
-   
           localStorage.setItem(
             "cartItems",
             JSON.stringify(
@@ -36,7 +34,6 @@ function MyCart() {
           );
           window.dispatchEvent(new Event("storage"));
         }
-        setCartProducts(data.data);
       } catch (err) {
         console.log("Error loading cart:", err);
       }
@@ -45,16 +42,16 @@ function MyCart() {
     loadCartProducts();
   }, []);
 
-
+  // Recalculate total
   useEffect(() => {
     const totalPrice = cartProducts.reduce((total, product) => {
-      const quantity = quantities[product.id] || product.quantity || 1;
-      return total + product.product?.price * quantity;
+      const quantity = quantities[product.id] ?? product.quantity ?? 1;
+      return total + (product.product?.price || 0) * quantity;
     }, 0);
     setTotal(totalPrice);
   }, [cartProducts, quantities]);
 
- 
+  // Update local storage cart
   const updateLocalStorageCart = (updatedCart) => {
     localStorage.setItem(
       "cartItems",
@@ -67,24 +64,8 @@ function MyCart() {
     );
     window.dispatchEvent(new Event("storage"));
   };
-  const handleIncrement = async (productId) => {
-    const currentQuantity = quantities[productId] ?? 1;
-    const newQuantity = currentQuantity + 1;
-    setQuantities((prev) => ({
-      ...prev,
-      [productId]: newQuantity,
-    }));
 
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantity: newQuantity }),
-        }
-      );
-
+  // Increment quantity
   const handleIncrement = async (productId) => {
     const currentQuantity = quantities[productId] ?? 1;
     const newQuantity = currentQuantity + 1;
@@ -110,28 +91,24 @@ function MyCart() {
         );
         setCartProducts(updatedCart);
         updateLocalStorageCart(updatedCart);
+      } else {
+        console.error("Failed to update cart quantity");
       }
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : null;
-
-      if (!response.ok) {
-        console.error("Server error:", data?.message || response.statusText);
-        return;
-      }
-
-      console.log("Cart updated successfully:", data);
     } catch (error) {
       console.error("Error updating cart:", error);
     }
   };
 
-
+  // Decrement quantity or confirm delete if it’s 1
   const handleDecrement = async (productId) => {
     const currentQuantity = quantities[productId] ?? 1;
-    if (currentQuantity <= 1) return;
+
+    if (currentQuantity <= 1) {
+      confirmDelete(productId);
+      return;
+    }
 
     const newQuantity = currentQuantity - 1;
-
     setQuantities((prev) => ({
       ...prev,
       [productId]: newQuantity,
@@ -159,61 +136,20 @@ function MyCart() {
     }
   };
 
-  const handleDecrement = async (productId) => {
-    console.log(productId, "productId");
-    const currentQuantity = quantities[productId] ?? 1;
-
-    if (currentQuantity <= 1){
-      return confirmDelete(productId);
-    }
-
-    const newQuantity = currentQuantity - 1;
-
-    setQuantities((prev) => ({
-      ...prev,
-      [productId]: newQuantity,
-    }));
-
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantity: newQuantity }),
-        }
-      );
-
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : null;
-
-      if (!response.ok) {
-        console.error("Server error:", data?.message || response.statusText);
-        return;
-      }
-
-      console.log("Cart decremented successfully:", data);
-    } catch (error) {
-      console.error("Error decrementing cart:", error);
-    }
-  };
-
+  // Confirm delete popup
   const confirmDelete = (productId) => {
     setProductToDelete(productId);
     setShowPopup(true);
   };
 
-
-  const handleConfirmeDelete = async () => {
+  // Delete confirmed
+  const handleConfirmDelete = async () => {
     if (!productToDelete) return;
 
     try {
       const response = await fetch(
         `http://localhost:4000/api/cart/deleteCartProduct/${productToDelete}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        }
+        { method: "DELETE" }
       );
 
       if (response.ok) {
@@ -226,19 +162,6 @@ function MyCart() {
     } catch (err) {
       console.error("Error deleting cart item:", err);
     }
-    const response = await fetch(
-      `http://localhost:4000/api/cart/deleteCartProduct/${productId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = response.json();
-    console.log(data, "data");
-
-    setCartProducts((prev) => prev.filter((item) => item.id !== productId));
 
     setShowPopup(false);
     setProductToDelete(null);
@@ -249,6 +172,7 @@ function MyCart() {
     setProductToDelete(null);
   };
 
+  // Empty cart case
   if (cartProducts.length === 0) {
     return (
       <div className="no-products">
@@ -301,20 +225,6 @@ function MyCart() {
                 <button
                   className="quantity"
                   onClick={() => handleIncrement(product.id)}
-                  onClick={() => {
-  handleDecrement(product?.id);
-}}
-
-                >
-                  -
-                </button>
-                <div className="quantity-value">
-                  {" "}
-                  {quantities[product.id] ?? product.quantity}
-                </div>
-                <button
-                  className="quantity"
-                  onClick={() => handleIncrement(product?.id)}
                 >
                   +
                 </button>
@@ -349,56 +259,14 @@ function MyCart() {
         </div>
       </div>
 
-    
       {showPopup && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "white",
-            padding: "20px",
-            border: "2px solid #333",
-            borderRadius: "8px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-            zIndex: 1000,
-            textAlign: "center",
-          }}
-        >
+        <div className="delete-popup">
           <p>Are you sure you want to delete this?</p>
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              justifyContent: "center",
-              marginTop: "10px",
-            }}
-          >
-            <button
-              style={{
-                background: "#e74c3c",
-                color: "white",
-                border: "none",
-                padding: "5px 10px",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={handleConfirmeDelete}
-            >
+          <div className="popup-buttons">
+            <button className="yes" onClick={handleConfirmDelete}>
               Yes
             </button>
-            <button
-              style={{
-                background: "#95a5a6",
-                color: "white",
-                border: "none",
-                padding: "5px 10px",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={handleCancelDelete}
-            >
+            <button className="no" onClick={handleCancelDelete}>
               No
             </button>
           </div>
