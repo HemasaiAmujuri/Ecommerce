@@ -11,7 +11,6 @@ function MyCart() {
   const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
 
-  // Load cart from backend
   useEffect(() => {
     const loadCartProducts = async () => {
       try {
@@ -42,7 +41,6 @@ function MyCart() {
     loadCartProducts();
   }, []);
 
-  // Recalculate total
   useEffect(() => {
     const totalPrice = cartProducts.reduce((total, product) => {
       const quantity = quantities[product.id] ?? product.quantity ?? 1;
@@ -51,7 +49,6 @@ function MyCart() {
     setTotal(totalPrice);
   }, [cartProducts, quantities]);
 
-  // Update local storage cart
   const updateLocalStorageCart = (updatedCart) => {
     localStorage.setItem(
       "cartItems",
@@ -65,7 +62,6 @@ function MyCart() {
     window.dispatchEvent(new Event("storage"));
   };
 
-  // Increment quantity
   const handleIncrement = async (productId) => {
     const currentQuantity = quantities[productId] ?? 1;
     const newQuantity = currentQuantity + 1;
@@ -99,10 +95,8 @@ function MyCart() {
     }
   };
 
-  // Decrement quantity or confirm delete if it’s 1
   const handleDecrement = async (productId) => {
     const currentQuantity = quantities[productId] ?? 1;
-
     if (currentQuantity <= 1) {
       confirmDelete(productId);
       return;
@@ -136,7 +130,6 @@ function MyCart() {
     }
   };
 
-  // Confirm delete popup
   const confirmDelete = (productId) => {
     setProductToDelete(productId);
     setShowPopup(true);
@@ -260,13 +253,54 @@ function MyCart() {
       </div>
 
       {showPopup && (
-        <div className="delete-popup">
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "white",
+            padding: "20px",
+            border: "2px solid #333",
+            borderRadius: "8px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+            zIndex: 1000,
+            textAlign: "center",
+          }}
+        >
           <p>Are you sure you want to delete this?</p>
-          <div className="popup-buttons">
-            <button className="yes" onClick={handleConfirmDelete}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "center",
+              marginTop: "10px",
+            }}
+          >
+            <button
+              style={{
+                background: "#e74c3c",
+                color: "white",
+                border: "none",
+                padding: "5px 10px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+              onClick={handleConfirmDelete}
+            >
               Yes
             </button>
-            <button className="no" onClick={handleCancelDelete}>
+            <button
+              style={{
+                background: "#95a5a6",
+                color: "white",
+                border: "none",
+                padding: "5px 10px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+              onClick={handleCancelDelete}
+            >
               No
             </button>
           </div>
