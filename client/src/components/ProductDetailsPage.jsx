@@ -86,7 +86,7 @@ function ProductDetailsPage() {
           <label>
             Quantity:
            <CustomDropdown
-  quantity={quantity}
+  quantity={product?.quantity ?? quantity}
   onQuantityChange={(newQty) => setQuantity(newQty)}
 />
 
