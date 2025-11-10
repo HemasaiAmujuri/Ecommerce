@@ -27,25 +27,34 @@ function LoginPage() {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('userId', data.data.id)
+      console.log("Login response:", data); // ✅ Inspect structure
+
+      if (response.ok && data.success) {
+        // ✅ Extract userId safely no matter backend structure
+        const userId = data?.data?.id || data?.user?.id || data?.id;
+
+        if (userId) {
+          localStorage.setItem("userId", userId);
+          console.log("Saved userId:", userId);
+        } else {
+          console.warn("⚠️ userId missing in response", data);
+        }
+
         setMessage("Login successful");
         setTimeout(() => {
           navigate("/products");
-        },1500)
-        
+        }, 1500);
       } else {
-        setMessage( data.message ?? "Login failed, please try again later");
+        setMessage(data.message ?? "Login failed, please try again later");
         setTimeout(() => {
-          setMessage("")
-        },3000);
+          setMessage("");
+        }, 3000);
       }
     } catch (error) {
       console.error("Error:", error);
       setMessage("Login failed, please try again later");
     }
   };
-
   return (
     <div className="hero">
       <div className="login-page">
@@ -68,22 +77,22 @@ function LoginPage() {
             <div className="input-group">
               <label>Password</label>
               <div className="password-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                // minLength="8"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="password"
-                required
-              />
-              <span
-                className="toggle-on"
-                onClick={() => {
-                  setShowPassword(!showPassword)
-                }}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye /> }
-              </span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  // minLength="8"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="password"
+                  required
+                />
+                <span
+                  className="toggle-on"
+                  onClick={() => {
+                    setShowPassword(!showPassword)
+                  }}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
               </div>
             </div>
 
@@ -95,7 +104,7 @@ function LoginPage() {
           <span className="signUp">
             Don't have an account? <Link to="/signUp">Sign up</Link>
           </span>
-           {message && <div className="message-box">{message}</div>}
+          {message && <div className="message-box">{message}</div>}
         </div>
       </div>
     </div>
