@@ -43,8 +43,10 @@ const singleProduct = async (req, res) => {
 
     const cartItem = cartItems.find((item) => Number(item.productId) === Number(id));
 
+    console.log(cartItem, cartItem);
+
     if (cartItem) {
-      product.quantity = cartItem.quantity;
+      product.quantity = cartItem.quantity ?? 1;
     }
 
     return res.status(200).json({
