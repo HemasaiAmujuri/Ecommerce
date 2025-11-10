@@ -79,13 +79,12 @@ export default function ProductList() {
     }
   }, [searchInput, allProducts]);
 
-  // 🧩 Pagination
   const indexOfLast = currentPage * productsPerPage;
   const indexOfFirst = indexOfLast - productsPerPage;
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  // 🧩 Add to cart
+
   const storeItems = async (productId) => {
     const userId = localStorage.getItem("userId");
 
@@ -112,11 +111,7 @@ export default function ProductList() {
 
       if (response.ok && data.success) {
         console.log("✅ Added to cart successfully");
-
-        // Update UI instantly
         setAddedToCart((prev) => [...prev, productId]);
-
-        // Update localStorage
         const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
         if (!existingCart.find(item => item.productId === productId)) {
           existingCart.push({ productId, quantity: 1 });

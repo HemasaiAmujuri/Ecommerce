@@ -258,7 +258,7 @@
     "quantity": 1,
     "createdAt": "2025-11-07T09:44:07.304Z",
     "updatedAt": "2025-11-07T09:44:07.304Z",
-    "deletedAt": null
+    "deletedAt": "2025-11-10T07:00:01.252Z"
   },
   {
     "id": 30,
@@ -267,7 +267,7 @@
     "quantity": 1,
     "createdAt": "2025-11-07T09:44:08.886Z",
     "updatedAt": "2025-11-07T09:44:08.886Z",
-    "deletedAt": null
+    "deletedAt": "2025-11-10T06:59:59.378Z"
   },
   {
     "id": 31,
@@ -276,6 +276,60 @@
     "quantity": 1,
     "createdAt": "2025-11-07T09:44:10.303Z",
     "updatedAt": "2025-11-07T09:44:10.304Z",
+    "deletedAt": "2025-11-10T06:59:56.895Z"
+  },
+  {
+    "id": 32,
+    "userId": 4,
+    "productId": 3,
+    "quantity": 1,
+    "createdAt": "2025-11-07T11:55:14.811Z",
+    "updatedAt": "2025-11-07T11:55:14.811Z",
+    "deletedAt": "2025-11-10T06:59:54.467Z"
+  },
+  {
+    "id": 33,
+    "userId": 4,
+    "productId": 3,
+    "quantity": 1,
+    "createdAt": "2025-11-10T06:59:45.036Z",
+    "updatedAt": "2025-11-10T06:59:45.036Z",
+    "deletedAt": "2025-11-10T06:59:52.125Z"
+  },
+  {
+    "id": 34,
+    "userId": 4,
+    "productId": 2,
+    "quantity": 1,
+    "createdAt": "2025-11-10T07:00:04.174Z",
+    "updatedAt": "2025-11-10T07:00:04.174Z",
+    "deletedAt": "2025-11-10T07:11:34.077Z"
+  },
+  {
+    "id": 35,
+    "userId": 4,
+    "productId": 3,
+    "quantity": 1,
+    "createdAt": "2025-11-10T07:00:18.986Z",
+    "updatedAt": "2025-11-10T07:00:18.986Z",
+    "deletedAt": "2025-11-10T07:11:32.042Z"
+  },
+  {
+    "id": 36,
+    "userId": 4,
+    "productId": 7,
+    "quantity": 1,
+    "createdAt": "2025-11-10T07:00:40.663Z",
+    "updatedAt": "2025-11-10T07:00:40.663Z",
+    "deletedAt": "2025-11-10T07:11:30.016Z"
+  },
+  {
+    "id": 37,
+    "userId": 4,
+    "productId": 2,
+    "quantity": 1,
+    "createdAt": "2025-11-10T07:11:40.556Z",
+    "updatedAt": "2025-11-10T07:11:40.556Z",
     "deletedAt": null
   }
 ]
