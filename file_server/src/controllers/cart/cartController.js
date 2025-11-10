@@ -257,6 +257,7 @@ const addOrUpdateCartItem = async (req, res) => {
       });
     } else {
       const newItem = {
+        id: cartProducts.length ? cartProducts[cartProducts.length - 1].id + 1 : 1,
         userId: Number(userId),
         productId: Number(productId),
         quantity: Number(quantity),
