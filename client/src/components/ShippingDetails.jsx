@@ -9,6 +9,7 @@ function ShippingDetails() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [address, setAddress] = useState("");
 
   const userId = localStorage.getItem("userId") ?? "";
@@ -127,6 +128,19 @@ function ShippingDetails() {
     );
   }
 
+
+  const handleEmailChange = (e) => {
+  const value = e.target.value;
+  setEmail(value);
+
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regex.test(value)) {
+    setEmailError("Please enter a valid email address (e.g., example@gmail.com)");
+  } else {
+    setEmailError("");
+  }
+};
+
   return (
     <div className="shipping-container">
       <div className="shipping-body">
@@ -146,15 +160,17 @@ function ShippingDetails() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+  <label htmlFor="email">Email Address</label>
+  <input
+    type="email"
+    id="email"
+    placeholder="Enter your email"
+    value={email}
+    onChange={handleEmailChange}
+    required
+  />
+  {emailError && <small style={{ color: "red" }}>{emailError}</small>}
+</div>
 
           <div className="form-group">
             <label htmlFor="address">Shipping Address</label>

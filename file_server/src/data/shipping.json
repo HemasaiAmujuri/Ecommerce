@@ -72,5 +72,45 @@
     "createdAt": "2025-11-07T09:42:33.739Z",
     "updatedAt": "2025-11-07T09:42:33.739Z",
     "deletedAt": null
+  },
+  {
+    "id": 9,
+    "userId": "1",
+    "name": "dvsdv",
+    "email": "hemasaiamujuri",
+    "address": "xdvsv",
+    "createdAt": "2025-11-10T09:58:34.700Z",
+    "updatedAt": "2025-11-10T09:58:34.700Z",
+    "deletedAt": null
+  },
+  {
+    "id": 10,
+    "userId": "1",
+    "name": "sai",
+    "email": "sai@aads",
+    "address": "zcsdcsac",
+    "createdAt": "2025-11-10T09:59:20.679Z",
+    "updatedAt": "2025-11-10T09:59:20.679Z",
+    "deletedAt": null
+  },
+  {
+    "id": 11,
+    "userId": "1",
+    "name": "sai",
+    "email": "sai@gmail.com",
+    "address": "sdcvvsv",
+    "createdAt": "2025-11-10T10:04:25.635Z",
+    "updatedAt": "2025-11-10T10:04:25.635Z",
+    "deletedAt": null
+  },
+  {
+    "id": 12,
+    "userId": "5",
+    "name": "sai@gmail.com",
+    "email": "sai",
+    "address": "fdbdf",
+    "createdAt": "2025-11-10T10:07:10.477Z",
+    "updatedAt": "2025-11-10T10:07:10.477Z",
+    "deletedAt": null
   }
 ]
