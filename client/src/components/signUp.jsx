@@ -15,6 +15,8 @@ function SignUpPage() {
 
   const navigate = useNavigate();
 
+  const base_url = import.meta.env.VITE_BASE_URL
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -25,7 +27,7 @@ function SignUpPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/register", {
+      const response = await fetch(`${base_url}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

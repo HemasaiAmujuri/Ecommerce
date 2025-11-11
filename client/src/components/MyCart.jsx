@@ -11,13 +11,13 @@ function MyCart() {
   const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
 
-
+ const base_url = import.meta.env.VITE_BASE_URL
   useEffect(() => {
   const loadCartProducts = async () => {
     try {
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch(
-        `http://localhost:4000/api/cart/getCartByUserId/${userId}`
+        `${base_url }/api/cart/getCartByUserId/${userId}`
       );
       const data = await response.json();
 
@@ -47,7 +47,7 @@ function MyCart() {
   };
 
   loadCartProducts();
-}, []);
+}, [base_url]);
 
 
   useEffect(() => {
@@ -82,7 +82,7 @@ function MyCart() {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/cart/updateCartProduct/${productId}`,
+        `${base_url}/api/cart/updateCartProduct/${productId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -119,7 +119,7 @@ function MyCart() {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/cart/updateCartProduct/${product?.id}`,
+        `${base_url}/api/cart/updateCartProduct/${product?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -149,7 +149,7 @@ function MyCart() {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/cart/deleteCartProduct/${productToDelete}`,
+        `${base_url}/api/cart/deleteCartProduct/${productToDelete}`,
         { method: "DELETE" }
       );
 

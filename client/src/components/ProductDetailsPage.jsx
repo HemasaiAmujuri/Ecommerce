@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import "../styles/ProductDetailsPage.css";
 import CustomDropdown from "../components/CustomDropdown"
 
+const base_url = import.meta.env.VITE_BASE_URL
+
 function ProductDetailsPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -14,7 +16,7 @@ function ProductDetailsPage() {
     window.scrollTo(0, 0);
 
   
-    fetch(`http://localhost:4000/api/products/singleProduct/${id}`)
+    fetch(`${base_url }/api/products/singleProduct/${id}`)
       .then((res) => 
         res.json())
       .then((data) => {
@@ -38,7 +40,7 @@ function ProductDetailsPage() {
 
     const userId = localStorage.getItem("userId") ?? ""
   const handleAddToCart = async() => {
-       const response = await fetch(`http://localhost:4000/api/cart/addOrUpdateCartItem`, {
+       const response = await fetch(`${base_url}/api/cart/addOrUpdateCartItem`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

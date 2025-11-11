@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "../styles/LoginPage.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+const base_url = import.meta.env.VITE_BASE_URL
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +16,7 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/login", {
+      const response = await fetch(`${base_url}/api/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

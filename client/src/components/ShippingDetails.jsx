@@ -14,13 +14,15 @@ function ShippingDetails() {
 
   const userId = localStorage.getItem("userId") ?? "";
 
+  const base_url = import.meta.env.VITE_BASE_URL
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/cart/getCartByUserId/${userId}`
+          `${base_url}/api/cart/getCartByUserId/${userId}`
         );
         const data = await response.json();
         setCartItems(data.data);
@@ -30,7 +32,7 @@ function ShippingDetails() {
     };
 
     fetchProducts();
-  }, [userId]);
+  }, [userId,base_url]);
 
   const getTotal = () => {
     return cartItems.reduce(
@@ -56,7 +58,7 @@ function ShippingDetails() {
 
     try {
       const shippingRes = await fetch(
-        "http://localhost:4000/api/shipping/add-shippingInfo",
+        `${base_url}/api/shipping/add-shippingInfo`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -73,7 +75,7 @@ function ShippingDetails() {
       localStorage.removeItem("cartItems");
 
       const cartRes = await fetch(
-        `http://localhost:4000/api/cart/deleteCartItemsByuserId/${userId}`,
+        `${base_url}/api/cart/deleteCartItemsByuserId/${userId}`,
         {
           method: "DELETE",
         }

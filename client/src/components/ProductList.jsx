@@ -14,10 +14,13 @@ export default function ProductList() {
 
   const location = useLocation();
 
+
+  const base_url = import.meta.env.VITE_BASE_URL
+
   useEffect(() => {
     setLoading(true);
 
-    fetch('http://localhost:4000/api/products/all-products')
+    fetch(`${base_url}/api/products/all-products`)
       .then(res => res.json())
       .then(data => {
         console.log("Fetched data:", data);
@@ -37,7 +40,7 @@ export default function ProductList() {
         console.error("Fetch error:", err);
         setLoading(false);
       });
-  }, []);
+  }, [base_url]);
 
   // 🧩 Load cart items whenever location changes (fix)
   useEffect(() => {
@@ -93,7 +96,7 @@ export default function ProductList() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/cart/add-to-cart", {
+      const response = await fetch(`${base_url}/api/cart/add-to-cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
