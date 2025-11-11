@@ -14,7 +14,6 @@ export default function ProductList() {
 
   const location = useLocation();
 
-  // 🧩 Fetch all products
   useEffect(() => {
     setLoading(true);
 

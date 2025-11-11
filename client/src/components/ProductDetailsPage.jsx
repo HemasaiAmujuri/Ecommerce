@@ -52,7 +52,19 @@ function ProductDetailsPage() {
     setTimeout(()=>{
       setMessage("")
     },1500)
-  };
+const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+// Convert both sides to strings (or numbers) before comparison
+const existingItem = existingCart.find(item => String(item.productId) === String(id));
+
+if (existingItem) {
+  existingItem.quantity = quantity;
+} else {
+  existingCart.push({ productId: id, quantity: 1 });
+}
+
+localStorage.setItem("cartItems", JSON.stringify(existingCart));
+  }
 
 
 
