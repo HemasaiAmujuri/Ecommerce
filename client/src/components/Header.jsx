@@ -17,7 +17,13 @@ export default function Header() {
   const navigate = useNavigate();
 
 
-
+const capitalize = (str) => {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   useEffect(() => {
   fetch(`${base_url}/api/products/all-products`)
@@ -108,7 +114,7 @@ export default function Header() {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                     >
-                      {cat.name || cat}
+                      {capitalize(cat)}
                     </div>
                   ))}
                 </div>
