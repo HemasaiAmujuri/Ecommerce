@@ -6,24 +6,38 @@ import { FaUser } from 'react-icons/fa'
 import cartLogo from '../data/shopping-cart.png';
 import Logo from '../data/logo.png'
 
+
+  const base_url = import.meta.env.VITE_BASE_URL
+
+
 export default function Header() {
   const [categories, setCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
 
+
+
+
   useEffect(() => {
-    fetch('https://dummyjson.com/products/categories')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setCategories(data);
-        else setCategories([]);
-      })
-      .catch(err => {
-        console.error('Error fetching categories:', err);
+  fetch(`${base_url}/api/products/all-products`)
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data.data)) {
+        const uniqueCategories = [
+          ...new Set(data.data.map(product => product.category))
+        ];
+        setCategories(uniqueCategories);
+      } else {
         setCategories([]);
-      });
-  }, []);
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching categories:', err);
+      setCategories([]);
+    });
+}, []);
+
 
   const goToProducts = () => {
     navigate('/products');

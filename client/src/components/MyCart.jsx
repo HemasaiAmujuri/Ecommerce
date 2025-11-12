@@ -12,6 +12,7 @@ function MyCart() {
   const navigate = useNavigate();
 
  const base_url = import.meta.env.VITE_BASE_URL
+ 
   useEffect(() => {
   const loadCartProducts = async () => {
     try {

@@ -42,17 +42,15 @@ export default function ProductList() {
       });
   }, [base_url]);
 
-  // 🧩 Load cart items whenever location changes (fix)
   useEffect(() => {
     const loadCart = () => {
       const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
       setAddedToCart(savedCart.map(item => item.productId));
     };
 
-    loadCart(); // Run immediately
-  }, [location.pathname]); // 👈 Trigger every time user navigates back
+    loadCart(); 
+  }, [location.pathname]);
 
-  // 🧩 Filter products by category
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const category = params.get('category');
@@ -68,7 +66,6 @@ export default function ProductList() {
     }
   }, [location.search, allProducts]);
 
-  // 🧩 Filter products by search input
   useEffect(() => {
     if (searchInput.trim().length === 0) {
       setProducts(allProducts);
@@ -112,7 +109,6 @@ export default function ProductList() {
       console.log("Response data", data);
 
       if (response.ok && data.success) {
-        console.log("✅ Added to cart successfully");
         setAddedToCart((prev) => [...prev, productId]);
         const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
         if (!existingCart.find(item => item.productId === productId)) {
@@ -120,7 +116,7 @@ export default function ProductList() {
           localStorage.setItem("cartItems", JSON.stringify(existingCart));
         }
       } else {
-        console.error("❌ Failed:", data.message);
+        console.error("Failed:", data.message);
       }
     } catch (err) {
       console.error("Error:", err);

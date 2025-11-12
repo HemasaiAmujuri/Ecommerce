@@ -56,7 +56,7 @@ function ProductDetailsPage() {
     },1500)
 const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-// Convert both sides to strings (or numbers) before comparison
+
 const existingItem = existingCart.find(item => String(item.productId) === String(id));
 
 if (existingItem) {

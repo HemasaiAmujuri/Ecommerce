@@ -28,17 +28,16 @@ function LoginPage() {
       });
 
       const data = await response.json();
-      console.log("Login response:", data); // ✅ Inspect structure
+      console.log("Login response:", data);
 
       if (response.ok && data.success) {
-        // ✅ Extract userId safely no matter backend structure
         const userId = data?.data?.id || data?.user?.id || data?.id;
 
         if (userId) {
           localStorage.setItem("userId", userId);
           console.log("Saved userId:", userId);
         } else {
-          console.warn("⚠️ userId missing in response", data);
+          console.warn("userId missing in response", data);
         }
 
         setMessage("Login successful");

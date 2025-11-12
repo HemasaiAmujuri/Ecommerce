@@ -98,7 +98,7 @@ const getCartByUserId = async (req, res) => {
 
       return {
         ...cartItem,
-        product: product || null, // attach product details if found
+        product: product || null
       };
     });
 
