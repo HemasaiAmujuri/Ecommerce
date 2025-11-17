@@ -1,10 +1,20 @@
 const { Sequelize } = require('sequelize');
+const dotenv = require("dotenv");
+dotenv.config();
 
-const sequelize = new Sequelize('ecommerce', 'root', '1234567890', {
-  host: 'localhost',
+const sequelize = new Sequelize(process.env.DB_URL, {
+  dialect : 'postgres',
+  protocol: 'postgres',
   dialect: 'mysql',
   logging: false, 
-});
+  dialectOptions : {
+    ssl : {
+      require : false,
+      rejectUnauthorized : false
+    }
+  }
+},
+);
 
 (async () => {
   try {
