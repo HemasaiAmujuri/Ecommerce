@@ -5,11 +5,10 @@ dotenv.config();
 const sequelize = new Sequelize(process.env.DB_URL, {
   dialect : 'postgres',
   protocol: 'postgres',
-  dialect: 'mysql',
   logging: false, 
   dialectOptions : {
     ssl : {
-      require : false,
+      require : true,
       rejectUnauthorized : false
     }
   }
@@ -19,7 +18,10 @@ const sequelize = new Sequelize(process.env.DB_URL, {
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Connected to MySQL database.');
+    console.log('✅ Connected to PostgreSQL database.');
+
+    await sequelize.sync({ alter: true });
+    console.log('✅ Tables synced successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error);
   }
