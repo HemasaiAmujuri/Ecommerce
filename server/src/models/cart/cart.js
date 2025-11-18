@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/db");
 
 
-const Cart = sequelize.define("Cart", {
+const Cart = sequelize.define("carts", {
     id : {
         type : DataTypes.INTEGER,
         autoIncrement : true,
@@ -14,7 +14,7 @@ const Cart = sequelize.define("Cart", {
         allowNull : false,
         primaryKey : true,
         references : {
-            model : "Users",
+            model : "users",
             key : 'id'
         }
     },
@@ -23,7 +23,7 @@ const Cart = sequelize.define("Cart", {
         allowNull : false,
         primaryKey : true,
         references:  {
-            model : "Products",
+            model : "products",
             key : 'id'
         }
     },

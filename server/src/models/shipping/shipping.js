@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/db");
 
 const Shipping = sequelize.define(
-  "Shipping",
+  "shippings",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,11 +10,19 @@ const Shipping = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    name : {
+      type : DataTypes.STRING,
+      allowNull:false
+    },
+    email : {
+      type : DataTypes.STRING,
+      allowNull: false
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references : {
-        model : "Users", 
+        model : "users", 
         key : "id"
       }
     },
