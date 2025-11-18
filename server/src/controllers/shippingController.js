@@ -1,7 +1,7 @@
 const Shipping = require("../models/shipping/shipping");
 
 const addShippingInfo = async (req, res) => {
-  const { address, userId } = req.body;
+  const { name, email, address, userId } = req.body;
 
   if (!address || !userId) {
   return res.status(400).json({ success: false, message: "Address and userId are required" });
@@ -10,6 +10,8 @@ const addShippingInfo = async (req, res) => {
 
   try {
     const shippingAddress = await Shipping.create({
+      name,
+      email,
       address,
       userId,
     });
