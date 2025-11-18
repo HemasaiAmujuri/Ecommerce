@@ -76,7 +76,132 @@ const addToCart = async (req, res) => {
   }
 };
 
+
+
+const updateCartItem = async(req,res) => {
+  try{
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+      if (!id) {
+      return res.status(400).json({ success: false, message: "Cart item id is required" });
+    }
+
+    const data = await Cart.findOne({ where : { id }});
+
+    if (!data) {
+      return res.status(404).json({ success: false, message: "Cart item not found" });
+    }
+
+    data.quantity = quantity;
+    await data.save();
+
+    return res.status(200).json({ success : true, data : data, message : "Data updated successfully"})
+  }catch(err){
+     return res.status(500).json({ success : false, message : err.message })
+  }
+}
+
+
+
+const deleteCartItem = async(req,res) => {
+  try{
+  const { id } = req.params;
+
+  const deletedCount = await Cart.destroy( { where : { id }})
+
+  if(!deletedCount){
+      return res.status(404).json({ success : false, message : "Cart item not found"});
+    }
+    
+    return res.status(200).json({ success : true, message : "Cart item deleted successfully"})
+  }catch(err){
+     return res.status(500).json({ success : false, message : err.message })
+  }
+
+}
+
+
+
+const deleteCartItemsByuserId = async(req,res) => {
+
+try{
+  const userId = req.params.userId;
+
+   if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+
+  const deleteCount = await Cart.destroy({ where : {userId} })
+
+  if(!deleteCount){
+     return res.status(404).json({ success: false, message: "No cart items found for this user" });
+  }
+
+  return res.status(200).json({ success : true, message : "All user cart products deleted successfully"})
+}catch(err){
+   res.status(500).json({ success: false, message: err.message });
+}
+}
+
+
+const addOrUpdateCartItem = async (req, res) => {
+  try {
+    const { userId, productId, quantity } = req.body;
+
+    if (!userId || !productId || !quantity || quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "userId, productId, and valid quantity are required",
+      });
+    }
+
+    const existingItem = await Cart.findOne({
+      where: { 
+        userId: Number(userId), 
+        productId: Number(productId) 
+      },
+    });
+
+    console.log(existingItem, "existingItem");
+
+    if (existingItem) {
+      existingItem.quantity = Number(quantity);
+      existingItem.updatedAt = new Date();
+
+      await existingItem.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Cart item quantity updated successfully",
+        data: existingItem,
+      });
+    } else {
+
+      const newItem = await Cart.create({
+        userId: Number(userId),
+        productId: Number(productId),
+        quantity: Number(quantity)
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: "New product added to cart successfully",
+        data: newItem,
+      });
+    }
+  } catch (err) {
+    console.error("Add/Update cart error:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
 module.exports = {
   cartProducts,
   addToCart,
+  updateCartItem,
+  deleteCartItem,
+  deleteCartItemsByuserId,
+  addOrUpdateCartItem
 };
