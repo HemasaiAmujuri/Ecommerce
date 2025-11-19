@@ -46,7 +46,7 @@ const Products = {
       ],
       "description": "Category of the product"
     },
-    "imgUrl": {
+    "img": {
       "type": "string",
       "format": "uri",
       "description": "URL of the product image"

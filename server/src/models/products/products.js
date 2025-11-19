@@ -44,7 +44,7 @@ const Products = sequelize.define("products", {
         allowNull : false,
 
     },
-    imgUrl : {
+    img : {
         type : DataTypes.TEXT,
         allowNull : false,
     },
