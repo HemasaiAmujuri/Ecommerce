@@ -26,6 +26,7 @@ router.put("/cart/updateCartProduct/:id", updateCartItem);
 router.delete("/cart/deleteCartProduct/:id", deleteCartItem);
 router.delete("/cart/deleteCartItemsByuserId/:userId", deleteCartItemsByuserId);
 router.put("/cart/addOrUpdateCartItem", addOrUpdateCartItem);
-router.post("/shipping/addShippingInfo", addShippingInfo);
+router.post("/shipping/add-shippingInfo", addShippingInfo);
+
 
 module.exports = router;
