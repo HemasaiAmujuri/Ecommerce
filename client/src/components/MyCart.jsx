@@ -22,8 +22,15 @@ function MyCart() {
       );
       const data = await response.json();
 
+      console.log("Fetched data:", data);
+
     if (data.success && Array.isArray(data.data)) {
-  setCartProducts(data.data);
+      const parsedData = data.data.map(product => ({
+        ...product,
+        img: JSON.parse(product.img), // convert string to array
+      }));
+
+  setCartProducts(parsedData);
 
   const initialQuantities = {};
   data.data.forEach((item) => {
@@ -200,19 +207,19 @@ function MyCart() {
               <div
                 className="cart-info"
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/products/${product.productId}`)}
+                onClick={() => navigate(`/products/${product?.productId}`)}
               >
                 <div className="product-image">
                   <img
                     src={
-                      product?.product?.thumbnail || product?.product?.img?.[0]
+                      product?.thumbnail || product?.img?.[0]
                     }
-                    alt={product?.product?.title}
+                    alt={product?.title}
                     height="150px"
                     width="150px"
                   />
                 </div>
-                <p className="title">{product?.product?.title}</p>
+                <p className="title">{product?.title}</p>
               </div>
 
               <div className="cart-count">
@@ -232,7 +239,7 @@ function MyCart() {
               </div>
 
               <div className="price-trash-container">
-                <p>&#8377;{Math.round(product?.product?.price * quantity)}</p>
+                <p>&#8377;{Math.round(product?.price * quantity)}</p>
                 <FaTrash
                   className="remove-icon"
                   onClick={() => confirmDelete(product.id)}

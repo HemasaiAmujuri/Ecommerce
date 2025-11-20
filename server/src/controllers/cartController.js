@@ -87,7 +87,7 @@ const updateCartItem = async(req,res) => {
       return res.status(400).json({ success: false, message: "Cart item id is required" });
     }
 
-    const data = await Cart.findOne({ where : { id }});
+    const data = await Cart.findOne({ where : { productId: id }});
 
     if (!data) {
       return res.status(404).json({ success: false, message: "Cart item not found" });
