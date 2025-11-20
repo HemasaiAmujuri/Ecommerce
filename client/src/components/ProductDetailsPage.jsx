@@ -21,7 +21,11 @@ function ProductDetailsPage() {
         res.json())
       .then((data) => {
         console.log("Fetched product data:", data)
-      setProduct(data.data)
+        const parsedData = data.data.map(product => ({
+        ...product,
+        img: JSON.parse(product.img), // convert string to array
+      }));
+      setProduct(parsedData)
   })
       .catch((err) => console.error(err));
   }, [id]);
