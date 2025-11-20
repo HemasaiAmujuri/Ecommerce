@@ -25,7 +25,12 @@ function ShippingDetails() {
           `${base_url}/api/cart/getCartByUserId/${userId}`
         );
         const data = await response.json();
-        setCartItems(data.data);
+         const parsedData = data.data.map(product => ({
+        ...product,
+        img: JSON.parse(product.img), // convert string to array
+      }));
+        console.log("Fetched data:", data);
+        setCartItems(parsedData);
       } catch (err) {
         console.log(err);
       }
@@ -36,8 +41,8 @@ function ShippingDetails() {
 
   const getTotal = () => {
     return cartItems.reduce(
-      (total, item) =>
-        Math.ceil(total + (item?.product?.price || 0) * (item?.quantity || 1)),
+      (total, product) =>
+        Math.ceil(total + (product?.price || 0) * (product?.quantity || 1)),
       0
     );
   };
@@ -195,20 +200,20 @@ function ShippingDetails() {
             ) : (
               <ul className="summary-list">
   
-                {cartItems.map((item) => (
-                  <li key={item.id} className="summary-item">
+                {cartItems.map((product) => (
+                  <li key={product.id} className="summary-item">
 
                     <img
-                      src={item?.product?.thumbnail || item?.product?.img?.[0]}
-                      alt={item?.product?.title}
+                      src={product?.thumbnail || product?.img?.[0]}
+                      alt={product?.title}
                       className="summary-image"
                     />
                     <span className="summary-title">
-                      {item?.product?.title}
+                      {product?.title}
                     </span>
-                    <span className="summary-qty">Qty: {item?.quantity}</span>
+                    <span className="summary-qty">Qty: {product?.quantity}</span>
                     <span className="summary-cost">
-                      ₹{Math.ceil(item?.product?.price * item?.quantity)}
+                      ₹{Math.ceil(product?.price * product?.quantity)}
                     </span>
                   </li>
                 ))}

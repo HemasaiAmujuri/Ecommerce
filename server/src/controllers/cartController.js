@@ -11,9 +11,14 @@ const cartProducts = async (req, res) => {
     if (data.length === 0) {
       return res.status(404).json({ success: false, message: "No data found" });
     }
+
     for (const item of data) {
       const product = await Products.findOne({ where: { id: item.productId } });
-      if (product) cartProductsList.push(product);
+      if (product){ cartProductsList.push({
+        ...product.dataValues, 
+        quantity: item.quantity ?? 1
+      });
+    }
     }
     return res
       .status(200)
