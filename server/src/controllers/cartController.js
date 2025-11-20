@@ -6,7 +6,7 @@ const Products = require("../models/products/products");
 const cartProducts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const data = await Cart.findAll({ where: { userId } });
+    const data = await Cart.findAll({ where: { userId },   order: [['id', 'ASC']] });
     let cartProductsList = [];
     if (data.length === 0) {
       return res.status(404).json({ success: false, message: "No data found" });

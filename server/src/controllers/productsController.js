@@ -4,7 +4,7 @@ const Cart = require("../models/cart/cart")
 const products = async (req, res) => {
   try {
     const data = await Products.findAll({
-      order: [['id', 'ASC']],
+      order: [['id', 'ASC']]
     });
     return res
       .status(200)
