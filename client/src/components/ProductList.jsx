@@ -26,8 +26,13 @@ export default function ProductList() {
         console.log("Fetched data:", data);
 
         if (data.success && Array.isArray(data.data)) {
-          setAllProducts(data.data);
-          setProducts(data.data);
+          const parsedData = data.data.map(product => ({
+        ...product,
+        img: JSON.parse(product.img), // convert string to array
+      }));
+
+          setAllProducts(parsedData);
+          setProducts(parsedData);
         } else {
           console.error("Unexpected API response format:", data);
           setAllProducts([]);
