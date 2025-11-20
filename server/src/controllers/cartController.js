@@ -113,7 +113,7 @@ const deleteCartItem = async(req,res) => {
   try{
   const { id } = req.params;
 
-  const deletedCount = await Cart.destroy( { where : { id }})
+  const deletedCount = await Cart.destroy( { where : { productId: id }})
 
   if(!deletedCount){
       return res.status(404).json({ success : false, message : "Cart item not found"});
