@@ -207,7 +207,7 @@ function MyCart() {
               <div
                 className="cart-info"
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/products/${product?.productId}`)}
+                onClick={() => navigate(`/products/${product?.id}`)}
               >
                 <div className="product-image">
                   <img
