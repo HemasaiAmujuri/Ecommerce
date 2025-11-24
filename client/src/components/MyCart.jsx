@@ -61,7 +61,7 @@ function MyCart() {
   useEffect(() => {
     const totalPrice = cartProducts.reduce((total, product) => {
       const quantity = quantities[product.id] ?? product.quantity ?? 1;
-      return total + (product.product?.price || 0) * quantity;
+      return total + (product?.price || 0) * quantity;
     }, 0);
     setTotal(totalPrice);
   }, [cartProducts, quantities]);
