@@ -25,12 +25,8 @@ function MyCart() {
       console.log("Fetched data:", data);
 
     if (data.success && Array.isArray(data.data)) {
-      const parsedData = data.data.map(product => ({
-        ...product,
-        img: JSON.parse(product.img), // convert string to array
-      }));
 
-  setCartProducts(parsedData);
+  setCartProducts(data.data);
 
   const initialQuantities = {};
   data.data.forEach((item) => {

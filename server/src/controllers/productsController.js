@@ -22,7 +22,8 @@ const products = async (req, res) => {
 
 const singleProduct = async (req, res) => {
   try {
-    const { id, userId } = req.params;
+    const { id } = req.params;
+    const { userId } = req.body;
 
     if (!id) {
       return res.status(400).json({ success: false, message: "Invalid ID" });

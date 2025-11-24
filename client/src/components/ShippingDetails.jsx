@@ -25,12 +25,8 @@ function ShippingDetails() {
           `${base_url}/api/cart/getCartByUserId/${userId}`
         );
         const data = await response.json();
-         const parsedData = data.data.map(product => ({
-        ...product,
-        img: JSON.parse(product.img), // convert string to array
-      }));
         console.log("Fetched data:", data);
-        setCartItems(parsedData);
+        setCartItems(data.data);
       } catch (err) {
         console.log(err);
       }

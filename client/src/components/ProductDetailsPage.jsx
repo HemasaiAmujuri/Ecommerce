@@ -11,24 +11,37 @@ function ProductDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState("")
 
-  useEffect(() => {
-  
-    window.scrollTo(0, 0);
+  const userId = localStorage.getItem("userId") ?? ""
 
-  
-    fetch(`${base_url }/api/products/singleProduct/${id}`)
-      .then((res) => 
-        res.json())
-      .then((data) => {
-        console.log("Fetched product data:", data)
-         const product = {
-      ...data.data,
-      img: JSON.parse(data.data.img), // convert string to array
-    };
-    setProduct(product);
-  })
-      .catch((err) => console.error(err));
-  }, [id]);
+
+
+  useEffect(() => {
+  window.scrollTo(0, 0);
+
+  if (!userId) return;
+
+  const fetchProduct = async () => {
+    try {
+      const res = await fetch(`${base_url}/api/products/singleProduct/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId })
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+      const data = await res.json();
+      console.log("Fetched product data:", data);
+      setProduct(data.data);
+    } catch (err) {
+      console.error("Failed to fetch product:", err);
+    }
+  };
+
+  fetchProduct();
+}, [id, userId]);
+
+
 
   useEffect( () => {
       const cartItemsStr = localStorage.getItem('cartItems');
@@ -42,7 +55,7 @@ function ProductDetailsPage() {
 
   if (!product) return <p>Loading...</p>;
 
-    const userId = localStorage.getItem("userId") ?? ""
+    
   const handleAddToCart = async() => {
        const response = await fetch(`${base_url}/api/cart/addOrUpdateCartItem`, {
       method: "PUT",
