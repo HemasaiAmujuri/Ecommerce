@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/ProductDetailsPage.css";
-import CustomDropdown from "../components/CustomDropdown";
 import Loader from "./loader";
 
 const base_url = import.meta.env.VITE_BASE_URL;
@@ -17,62 +16,79 @@ function ProductDetailsPage() {
 
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    if (!userId) return;
+  window.scrollTo(0, 0);
+  if (!userId) return;
 
-    const fetchProduct = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${base_url}/api/products/singleProduct/${id}`, {
+  let timer;
+
+  const fetchProduct = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${base_url}/api/products/singleProduct/${id}`,
+        {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId }),
-        });
+        }
+      );
 
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        setProduct(data?.data ?? null);
-      } catch (err) {
-        console.error("Failed to fetch product:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-    fetchProduct();
-  }, [id, userId]);
+      const data = await res.json();
+      setProduct(data?.data ?? null);
+      setQuantity(data?.data?.quantity ?? 1)
+      setMessage(data?.message);
 
+      timer = setTimeout(() => {
+        setMessage("");
+      }, 3000);
 
-  useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    const item = cartItems.find((item) => String(item.productId) === String(id));
-    if (item) setQuantity(item.quantity);
-  }, [id]);
+    } catch (err) {
+      console.error("Failed to fetch product:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleAddToCart = async () => {
+  fetchProduct();
+  return () => clearTimeout(timer);
+
+}, [id, userId]);
+
+  const handleIncrement = async (productId) => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+
     setLoading(true);
     try {
-      const response = await fetch(`${base_url}/api/cart/addOrUpdateCartItem`, {
+      await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, productId: id, quantity }),
+        body: JSON.stringify({ quantity: newQuantity }),
       });
-      const data = await response.json();
-      setMessage(data?.message ?? "Product added/updated in cart");
-      setTimeout(() => setMessage(""), 1500);
+    } catch (error) {
+      console.error("Error updating cart:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      const existingItem = existingCart.find((item) => String(item.productId) === String(id));
+  const handleDecrement = async (productId) => {
+    if (quantity <= 1) return;
 
-      if (existingItem) {
-        existingItem.quantity = quantity;
-      } else {
-        existingCart.push({ productId: id, quantity });
-      }
+    const newQuantity = quantity - 1;
+    setQuantity(newQuantity);
 
-      localStorage.setItem("cartItems", JSON.stringify(existingCart));
+    setLoading(true);
+    try {
+      await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
     } catch (err) {
-      console.error("Error adding to cart:", err);
+      console.error("Error updating cart:", err);
     } finally {
       setLoading(false);
     }
@@ -90,28 +106,40 @@ function ProductDetailsPage() {
 
           <div className="details">
             <h1>{product?.title ?? ""}</h1>
+
             <p className="price">
               <strong>Price:</strong> &#8377;{product?.price ?? ""}
             </p>
+
             <p className="category">
               <strong>Category:</strong> {product?.category ?? ""}
             </p>
+
             <p className="description">
               <strong>Description:</strong> {product?.description ?? ""}
             </p>
 
-            <div className="purchase">
-              <label>
-                Quantity:
-                <CustomDropdown
-                  quantity={quantity}
-                  onQuantityChange={(newQty) => setQuantity(newQty)}
-                />
-              </label>
-              <button className="add-to-cart-btn" onClick={handleAddToCart}>
-                Add to Cart
+            <div className="product-count">
+              <button
+                className="quantity"
+                disabled={quantity === 1}
+                onClick={() => handleDecrement(product.id)}
+              >
+                -
+              </button>
+
+              <div className="quantity-value">
+                {quantity}
+              </div>
+
+              <button
+                className="quantity"
+                onClick={() => handleIncrement(product.id)}
+              >
+                +
               </button>
             </div>
+
             {message && <div className="message-box">{message}</div>}
           </div>
         </>
@@ -123,4 +151,3 @@ function ProductDetailsPage() {
 }
 
 export default ProductDetailsPage;
-

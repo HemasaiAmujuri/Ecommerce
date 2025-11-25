@@ -20,45 +20,55 @@ function SignUpPage() {
   const base_url = import.meta.env.VITE_BASE_URL
 
   const handleSignUp = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMessage("Passwords does not match")
-      setTimeout(() => setMessage(""), 3000);
-      return;
+  if (password !== confirmPassword) {
+    setMessage("Passwords do not match");
+    setTimeout(() => setMessage(""), 3000);
+    return;
+  }
+
+  let timer;
+
+  try {
+    setLoading(true);
+
+    const response = await fetch(`${base_url}/api/user/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+        mobile: mobile.trim(),
+        password,
+      }),
+    });
+
+    const data = await response.json();
+    setLoading(false);
+
+    if (response.ok) {
+      localStorage.setItem("userId", data.data.id);
+      setMessage("Registration successful");
+
+      setTimeout(() => navigate("/products"), 1500);
+
+      timer = setTimeout(() => setMessage(""), 3000);
+
+    } else {
+      setMessage(data?.message ?? "Registration failed, please try again");
+      timer = setTimeout(() => setMessage(""), 3000);
     }
 
-    try {
-      setLoading(true)
-      const response = await fetch(`${base_url}/api/user/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          mobile,
-          password,
-        }),
-      });
+  } catch (error) {
+    console.error("Error:", error);
+  }
 
-      const data = await response.json();
-      setLoading(false)
-      if (response.ok) {
-        localStorage.setItem("userId", data.data.id);
-        setMessage("registration successful");
-        setTimeout(() => {
-          navigate("/products");
-        }, 1500);
-        setTimeout(() => setMessage(""), 3000);
-      } else {
-        setMessage( data?.message ?? "registration failed, please try again later");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  return () => clearTimeout(timer);
+};
+
 
   return (
     <div className="hero">
