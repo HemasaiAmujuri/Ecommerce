@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/LoginPage.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Loader from "./loader";
 
 const base_url = import.meta.env.VITE_BASE_URL
 function LoginPage() {
@@ -9,6 +10,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
 
@@ -16,6 +18,7 @@ function LoginPage() {
     e.preventDefault();
 
     try {
+      setLoading(true)
       const response = await fetch(`${base_url}/api/user/login`, {
         method: "POST",
         headers: {
@@ -29,6 +32,7 @@ function LoginPage() {
 
       const data = await response.json();
       console.log("Login response:", data);
+      setLoading(false)
 
       if (response.ok && data.success) {
         const userId = data?.data?.id || data?.user?.id || data?.id;
@@ -107,6 +111,9 @@ function LoginPage() {
           {message && <div className="message-box">{message}</div>}
         </div>
       </div>
+      {loading && (
+        <Loader loading={loading} />
+      )}
     </div>
   );
 }

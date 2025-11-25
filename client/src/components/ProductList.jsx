@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../styles/ProductList.css';
 import { IoIosSearch } from "react-icons/io";
+import Loader from './loader';
 
 export default function ProductList() {
   const [allProducts, setAllProducts] = useState([]);
@@ -26,10 +27,6 @@ export default function ProductList() {
         console.log("Fetched data:", data);
 
         if (data.success && Array.isArray(data.data)) {
-      //     const parsedData = data.data.map(product => ({
-      //   ...product,
-      //   img: JSON.parse(product.img), // convert string to array
-      // }));
 
           setAllProducts(data.data);
           setProducts(data.data);
@@ -128,7 +125,7 @@ export default function ProductList() {
     }
   };
 
-  if (loading) return null;
+  // if (loading) return null;
 
   return (
     <div className="product-list">
@@ -189,6 +186,9 @@ export default function ProductList() {
             ))}
           </div>
         </>
+      )}
+      {loading && (
+        <Loader loading={loading} />
       )}
     </div>
   );

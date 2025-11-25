@@ -2,6 +2,7 @@ import "../styles/MyCart.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
+import Loader from "./loader"
 
 function MyCart() {
   const [cartProducts, setCartProducts] = useState([]);
@@ -9,12 +10,14 @@ function MyCart() {
   const [total, setTotal] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [loading, setLoading ] = useState(false)
   const navigate = useNavigate();
 
  const base_url = import.meta.env.VITE_BASE_URL
  
   useEffect(() => {
   const loadCartProducts = async () => {
+       setLoading(true)
     try {
       const userId = localStorage.getItem("userId") ?? "";
       const response = await fetch(
@@ -27,7 +30,6 @@ function MyCart() {
     if (data.success && Array.isArray(data.data)) {
 
   setCartProducts(data.data);
-
   const initialQuantities = {};
   data.data.forEach((item) => {
     initialQuantities[item.id] = item.quantity;
@@ -47,6 +49,8 @@ function MyCart() {
 }
     } catch (err) {
       console.log("Error loading cart:", err);
+    }finally {
+      setLoading(false); 
     }
   };
 
@@ -105,7 +109,9 @@ function MyCart() {
       }
     } catch (error) {
       console.error("Error updating cart:", error);
-    }
+    }finally {
+  setLoading(false);
+}
   };
 
   const handleDecrement = async (product) => {
@@ -177,8 +183,10 @@ function MyCart() {
     setProductToDelete(null);
   };
 
-  if (cartProducts.length === 0) {
-    return (
+    {loading && <Loader loading={loading} />} 
+
+  if (!loading && cartProducts.length === 0) {
+    return ( 
       <div className="no-products">
         <b>No items found in your cart.</b>
       </div>
@@ -316,6 +324,9 @@ function MyCart() {
             </button>
           </div>
         </div>
+      )}
+      {loading && (
+        <Loader loading={loading} />
       )}
     </div>
   );

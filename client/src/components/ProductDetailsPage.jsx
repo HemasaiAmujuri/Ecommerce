@@ -1,136 +1,126 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/ProductDetailsPage.css";
-import CustomDropdown from "../components/CustomDropdown"
+import CustomDropdown from "../components/CustomDropdown";
+import Loader from "./loader";
 
-const base_url = import.meta.env.VITE_BASE_URL
+const base_url = import.meta.env.VITE_BASE_URL;
 
 function ProductDetailsPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const userId = localStorage.getItem("userId") ?? ""
-
+  const userId = localStorage.getItem("userId") ?? "";
 
 
   useEffect(() => {
-  window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+    if (!userId) return;
 
-  if (!userId) return;
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${base_url}/api/products/singleProduct/${id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        });
 
-  const fetchProduct = async () => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setProduct(data?.data ?? null);
+      } catch (err) {
+        console.error("Failed to fetch product:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id, userId]);
+
+
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    const item = cartItems.find((item) => String(item.productId) === String(id));
+    if (item) setQuantity(item.quantity);
+  }, [id]);
+
+  const handleAddToCart = async () => {
+    setLoading(true);
     try {
-      const res = await fetch(`${base_url}/api/products/singleProduct/${id}`, {
-        method: "POST",
+      const response = await fetch(`${base_url}/api/cart/addOrUpdateCartItem`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId })
+        body: JSON.stringify({ userId, productId: id, quantity }),
       });
+      const data = await response.json();
+      setMessage(data?.message ?? "Product added/updated in cart");
+      setTimeout(() => setMessage(""), 1500);
 
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const existingCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      const existingItem = existingCart.find((item) => String(item.productId) === String(id));
 
-      const data = await res.json();
-      console.log("Fetched product data:", data);
-      setProduct(data.data);
+      if (existingItem) {
+        existingItem.quantity = quantity;
+      } else {
+        existingCart.push({ productId: id, quantity });
+      }
+
+      localStorage.setItem("cartItems", JSON.stringify(existingCart));
     } catch (err) {
-      console.error("Failed to fetch product:", err);
+      console.error("Error adding to cart:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  fetchProduct();
-}, [id, userId]);
-
-
-
-  useEffect( () => {
-      const cartItemsStr = localStorage.getItem('cartItems');
-    const cartItems = cartItemsStr ? JSON.parse(cartItemsStr) : [];
-    const numericId = Number(id);
-    const productIndex = cartItems.findIndex(item => item.id === numericId);
-    if (productIndex !== -1) {
-      setQuantity(cartItems[productIndex].quantity)
-    }
-  }, [id]);
-
-  if (!product) return <p>Loading...</p>;
-
-    
-  const handleAddToCart = async() => {
-       const response = await fetch(`${base_url}/api/cart/addOrUpdateCartItem`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId,
-        productId : id,
-        quantity: quantity }),
-    });
-
-    const data = await response.json();
-    setMessage(data?.message ?? "Product added and updated to cart")
-    setTimeout(()=>{
-      setMessage("")
-    },1500)
-const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-
-const existingItem = existingCart.find(item => String(item.productId) === String(id));
-
-if (existingItem) {
-  existingItem.quantity = quantity;
-} else {
-  existingCart.push({ productId: id, quantity: 1 });
-}
-
-localStorage.setItem("cartItems", JSON.stringify(existingCart));
-  }
-
-
-
-
   return (
     <div className="product-details-page">
-      <div className="image-container">
-        <img
-          src={
-            product.img && product.img.length > 0
-              ? product.img[0]
-              : ""
-          }
-          alt={product.title}
-        />
-      </div>
+      {loading && <Loader loading={loading} />}
 
-      <div className="details">
-        <h1>{product.title}</h1>
-        <p className="price">
-          <strong>Price:</strong> &#8377;{product.price}
-        </p>
-        <p className="category">
-          <strong>Category:</strong> {product.category}
-        </p>
-        <p className="description">
-          <strong>Description:</strong> {product.description}
-        </p>
+      {product ? (
+        <>
+          <div className="image-container">
+            <img src={product?.img?.[0] ?? ""} alt={product?.title ?? ""} />
+          </div>
 
-        <div className="purchase">
-          <label>
-            Quantity:
-           <CustomDropdown
-  quantity={product?.quantity ?? quantity}
-  onQuantityChange={(newQty) => setQuantity(newQty)}
-/>
+          <div className="details">
+            <h1>{product?.title ?? ""}</h1>
+            <p className="price">
+              <strong>Price:</strong> &#8377;{product?.price ?? ""}
+            </p>
+            <p className="category">
+              <strong>Category:</strong> {product?.category ?? ""}
+            </p>
+            <p className="description">
+              <strong>Description:</strong> {product?.description ?? ""}
+            </p>
 
-          </label>
-
-          <button className="add-to-cart-btn" onClick={handleAddToCart}>
-            Add to Cart
-          </button>
-        </div>
-        {message && <div className="message-box">{message}</div>}
-      </div>
+            <div className="purchase">
+              <label>
+                Quantity:
+                <CustomDropdown
+                  quantity={quantity}
+                  onQuantityChange={(newQty) => setQuantity(newQty)}
+                />
+              </label>
+              <button className="add-to-cart-btn" onClick={handleAddToCart}>
+                Add to Cart
+              </button>
+            </div>
+            {message && <div className="message-box">{message}</div>}
+          </div>
+        </>
+      ) : (
+        !loading && <p>Product not found.</p>
+      )}
     </div>
   );
 }
 
 export default ProductDetailsPage;
+
