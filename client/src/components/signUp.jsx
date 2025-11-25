@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/signUp.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import  Loader  from "./loader"
 
 function SignUpPage() {
   const [name, setName] = useState("");
@@ -12,6 +13,7 @@ function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmpassword, setShowConfirmpassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading,setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ function SignUpPage() {
     }
 
     try {
+      setLoading(true)
       const response = await fetch(`${base_url}/api/user/register`, {
         method: "POST",
         headers: {
@@ -41,7 +44,7 @@ function SignUpPage() {
       });
 
       const data = await response.json();
-      
+      setLoading(false)
       if (response.ok) {
         localStorage.setItem("userId", data.data.id);
         setMessage("registration successful");
@@ -161,6 +164,9 @@ function SignUpPage() {
           {message && <div className="message-box">{message}</div>}
         </div>
       </div>
+      {loading && (
+        <Loader loading={loading}/>
+      )}
     </div>
   );
 }
