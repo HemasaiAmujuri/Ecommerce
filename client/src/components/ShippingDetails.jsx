@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/ShippingDetails.css";
+import Loader from "./loader";
 
 function ShippingDetails() {
   const [cartItems, setCartItems] = useState([]);
   const [confirmed, setConfirmed] = useState(false);
   const [message, setMessage] = useState();
+  const [loading, setLoading ] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,6 +22,7 @@ function ShippingDetails() {
     window.scrollTo(0, 0);
 
     const fetchProducts = async () => {
+      setLoading(true)
       try {
         const response = await fetch(
           `${base_url}/api/cart/getCartByUserId/${userId}`
@@ -29,6 +32,8 @@ function ShippingDetails() {
         setCartItems(data.data);
       } catch (err) {
         console.log(err);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -45,6 +50,7 @@ function ShippingDetails() {
 
   const handleConfirmOrder = async () => {
 
+    setLoading(true)
     if (!cartItems.length) {
       setMessage("Please add items to your cart");
       setTimeout(() => setMessage(""), 1500);
@@ -225,6 +231,9 @@ function ShippingDetails() {
           {message && <div className="message-box">{message}</div>}
         </div>
       </div>
+      {loading && (
+        <Loader loading={loading} />
+      )}
     </div>
   );
 }
