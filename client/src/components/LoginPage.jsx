@@ -50,13 +50,11 @@ function LoginPage() {
         }, 1500);
       } else {
         setMessage(data.message ?? "Login failed, please try again later");
-        setTimeout(() => {
-          setMessage("");
-        }, 3000);
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessage("Login failed, please try again later");
+      setMessage(error.message ?? "Login failed, please try again later");
+      setLoading(false)
     }
   };
   return (
