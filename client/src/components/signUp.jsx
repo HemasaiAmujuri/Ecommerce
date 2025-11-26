@@ -63,6 +63,8 @@ function SignUpPage() {
     }
 
   } catch (error) {
+    setMessage(error?.message ?? "Registration failed, please try again");
+    setLoading(false)
     console.error("Error:", error);
   }
 
