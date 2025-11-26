@@ -96,15 +96,19 @@ const getCartByUserId = async (req, res) => {
         (p) => Number(p.id) === Number(cartItem.productId)
       );
 
-      return {
-        ...cartItem,
-        product: product || null
+      // return {
+      //   ...cartItem,
+      //   product: product || null
+      // };
+        return {
+        ...product,
+        quantity : item.quantity ?? null
       };
     });
 
     res.status(200).json({
       success: true,
-      message: "Cart items fetched successfully",
+      message: "Data retrieved successfully",
       data: detailedCart,
     });
   } catch (err) {

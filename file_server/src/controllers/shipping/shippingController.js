@@ -32,7 +32,7 @@ const createShipping = async (req, res) => {
     res.status(201).json({
       success: true,
       data: newShipping,
-      message: "Data created successfully",
+      message: "Data saved successfully",
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
