@@ -21,7 +21,7 @@ const {
 router.post("/user/register", register);
 router.post("/user/login", login);
 router.get("/products/all-products", products);
-router.get("/products/singleProduct/:id", singleProduct);
+router.post("/products/singleProduct/:id", singleProduct);
 router.post("/shipping/add-shippingInfo", createShipping);
 router.post("/cart/add-to-cart", addToCart);
 router.get("/cart/getCartByUserId/:userId", getCartByUserId);
