@@ -96,13 +96,12 @@ const getCartByUserId = async (req, res) => {
         (p) => Number(p.id) === Number(cartItem.productId)
       );
 
-      // return {
-      //   ...cartItem,
-      //   product: product || null
-      // };
+       if (!product) {
+    return null;
+  }
         return {
         ...product,
-        quantity : item.quantity ?? null
+        quantity : cartItem.quantity ?? product?.quantity ?? 1
       };
     });
 
