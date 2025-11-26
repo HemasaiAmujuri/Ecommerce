@@ -5,7 +5,6 @@ const sequelize = require("../../config/db");
 const Products = sequelize.define("products", {
     id : {
         type : DataTypes.INTEGER,
-        allowNull : false,
         primaryKey : true
     },
     title : {

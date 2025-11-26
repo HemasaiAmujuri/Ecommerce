@@ -47,32 +47,16 @@ const Products = {
       "description": "Category of the product"
     },
     "img": {
-      "type": "string",
-      "format": "uri",
-      "description": "URL of the product image"
+      "type": "object",
+      "description": "Product images stored as JSON (can contain multiple URLs or image info)"
     },
     "price": {
       "type": "number",
       "multipleOf": 0.01,
       "description": "Product price (up to 2 decimal places)"
     },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Record creation timestamp"
-    },
-    "updatedAt": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Record update timestamp"
-    },
-    "deletedAt": {
-      "type": ["string", "null"],
-      "format": "date-time",
-      "description": "Soft delete timestamp (if paranoid mode is enabled)"
-    }
   },
-  "required": ["title", "description", "category", "imgUrl", "price"],
+  "required": ["title", "description", "category", "img", "price"],
   "additionalProperties": false
 }
 

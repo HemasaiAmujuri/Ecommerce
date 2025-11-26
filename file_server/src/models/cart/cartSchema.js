@@ -17,7 +17,6 @@ const Cart = {
     },
     "quantity": {
       "type": "integer",
-      "minimum": 1,
       "default": 1,
       "description": "Quantity of product in the cart"
     },

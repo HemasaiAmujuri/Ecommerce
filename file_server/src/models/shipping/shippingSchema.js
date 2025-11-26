@@ -7,6 +7,14 @@ const Shipping = {
       "type": "integer",
       "description": "Auto-incrementing primary key"
     },
+    "name": {
+      "type": "string",
+      "description": "user name"
+    },
+    "email": {
+      "type": "string",
+      "description": "user email"
+    },
     "userId": {
       "type": "integer",
       "description": "Foreign key referencing the user ID"
@@ -31,7 +39,7 @@ const Shipping = {
       "description": "Soft delete timestamp (if paranoid mode is on)"
     }
   },
-  "required": ["userId", "address"],
+  "required": ["name", "email", "userId", "address"],
   "additionalProperties": false
 }
 
