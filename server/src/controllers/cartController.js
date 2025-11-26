@@ -101,7 +101,7 @@ const updateCartItem = async(req,res) => {
     data.quantity = quantity;
     await data.save();
 
-    return res.status(200).json({ success : true, data : data, message : "Data updated successfully"})
+    return res.status(200).json({ success : true, data : data, message : "Cart product updated successfully"})
   }catch(err){
      return res.status(500).json({ success : false, message : err.message })
   }

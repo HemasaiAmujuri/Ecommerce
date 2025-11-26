@@ -134,7 +134,7 @@ const updateCartItem = async (req, res) => {
 
     const cartProducts = loadCart();
     const cartIndex = cartProducts.findIndex(
-      (item) => item.id === Number(id) && item.deletedAt === null
+      (item) => item.productId === Number(id) && item.deletedAt === null
     );
 
     if (cartIndex === -1) {
@@ -151,7 +151,7 @@ const updateCartItem = async (req, res) => {
     return res.status(200).json({
       success: true,
       data: cartProducts[cartIndex],
-      message: "Cart item updated successfully",
+      message: "Cart product updated successfully",
     });
   } catch (err) {
     console.error("Update cart error:", err);
@@ -169,7 +169,7 @@ const deleteCartItem = async (req, res) => {
     }
 
     const cartProducts = loadCart();
-    const cartIndex = cartProducts.findIndex((item) => item.id === Number(id) && item.deletedAt === null);
+    const cartIndex = cartProducts.findIndex((item) => item.productId === Number(id) && item.deletedAt === null);
 
     if (cartIndex === -1) {
       return res.status(404).json({ success: false, message: "Cart item not found" });
