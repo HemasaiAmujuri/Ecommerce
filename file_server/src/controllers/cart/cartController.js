@@ -39,7 +39,27 @@ const addToCart = async (req, res) => {
       });
     }
 
+        if (quantity < 1) {
+  return res.status(400).json({ success: false, message: "Quantity must be at least 1" });
+}
+
     const cartProducts = loadCart();
+
+ const idx = cartProducts.findIndex(
+  item => Number(item.productId) === Number(productId) && item.deletedAt === null
+);
+
+if (idx !== -1) {
+
+  cartProducts[idx].quantity = quantity;
+  saveCart(cartProducts);
+
+   return res.status(200).json({
+    success: true,
+    data: cartProducts[idx],
+    message: "Cart item quantity updated successfully",
+  });
+}
 
     const newCartItem = {
       id: cartProducts.length ? cartProducts[cartProducts.length - 1].id + 1 : 1,
