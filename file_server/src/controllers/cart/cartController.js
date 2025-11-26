@@ -201,7 +201,7 @@ const deleteUserCartItems = async (req, res) => {
     const cartProducts = loadCart();
 
     const userCartItems = cartProducts.filter(
-      (item) => item.userId === Number(userId) && item.deletedAt === null
+      (item) => Number(item.userId) === Number(userId) && item.deletedAt === null
     );
 
     if (userCartItems.length === 0) {
@@ -209,7 +209,7 @@ const deleteUserCartItems = async (req, res) => {
     }
 
     const updatedCart = cartProducts.map((item) => {
-      if (item.userId === Number(userId) && item.deletedAt === null) {
+      if (Number(item.userId) === Number(userId) && item.deletedAt === null) {
         return { ...item, deletedAt: new Date().toISOString() };
       }
       return item;
