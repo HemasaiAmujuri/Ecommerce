@@ -25,8 +25,6 @@ function MyCart() {
       );
       const data = await response.json();
 
-      console.log("Fetched data:", data);
-
     if (data.success && Array.isArray(data.data)) {
 
   setCartProducts(data.data);
@@ -71,7 +69,7 @@ function MyCart() {
       "cartItems",
       JSON.stringify(
         updatedCart.map((item) => ({
-          productId: item.productId,
+          productId: item.id,
           quantity: item.quantity,
         }))
       )
@@ -183,8 +181,6 @@ function MyCart() {
     setProductToDelete(null);
   };
 
-    {loading && <Loader loading={loading} />} 
-
   if (!loading && cartProducts.length === 0) {
     return ( 
       <div className="no-products">
@@ -216,7 +212,7 @@ function MyCart() {
                 <div className="product-image">
                   <img
                     src={
-                      product?.thumbnail || product?.img?.[0]
+                      product?.img?.[0]
                     }
                     alt={product?.title}
                     height="150px"

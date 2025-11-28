@@ -108,7 +108,7 @@ const capitalize = (str) => {
                       key={idx}
                       className="dropdown-item"
                       onClick={() => {
-                        const categoryParam = (cat.slug || cat).toLowerCase().replace(/\s+/g, '-');
+                        const categoryParam = (cat).toLowerCase().replace(/\s+/g, '-');
                         navigate(`/products?category=${encodeURIComponent(categoryParam)}`);
                         setShowDropdown(false);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
