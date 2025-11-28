@@ -18,8 +18,8 @@ export default function Footer() {
           <ul>
             <li><Link to="/products">Home </Link></li>
             <li><Link to="/products">Shop</Link></li>
-            <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="#">About Us</Link></li>
+            <li><Link to="#">Contact</Link></li>
           </ul>
         </div>
 
@@ -27,10 +27,10 @@ export default function Footer() {
         <div className="footer-links">
           <h3>Customer Service</h3>
           <ul>
-            <li><Link to="/faq">FAQs</Link></li>
-            <li><Link to="/returns">Returns</Link></li>
-            <li><Link to="/shipping">Shipping Info</Link></li>
-            <li><Link to="/support">Help Center</Link></li>
+            <li><Link to="#">FAQs</Link></li>
+            <li><Link to="#">Returns</Link></li>
+            <li><Link to="#">Shipping Info</Link></li>
+            <li><Link to="#">Help Center</Link></li>
           </ul>
         </div>
         <div className="footer-social">
