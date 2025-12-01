@@ -43,7 +43,7 @@ body {
 
 .form-group input,
 .form-group textarea {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   font-size: 14px;
   border-radius: 5px;
