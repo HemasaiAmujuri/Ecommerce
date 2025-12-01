@@ -38,7 +38,7 @@ function MyCart() {
     "cartItems",
     JSON.stringify(
       data.data.map((item) => ({
-        productId: item.productId,
+        productId: item.id,
         quantity: item.quantity,
       }))
     )

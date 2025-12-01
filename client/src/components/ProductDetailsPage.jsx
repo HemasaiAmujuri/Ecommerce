@@ -57,22 +57,34 @@ function ProductDetailsPage() {
 }, [id, userId]);
 
   const handleIncrement = async (productId) => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
+  const newQuantity = quantity + 1;
+  setQuantity(newQuantity);
 
-    setLoading(true);
-    try {
-      await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity: newQuantity }),
-      });
-    } catch (error) {
-      console.error("Error updating cart:", error);
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const res = await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: newQuantity }),
+    });
+
+    if (res.ok) {
+      let localCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      localCart = localCart.map(item =>
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      );
+      localStorage.setItem("cartItems", JSON.stringify(localCart));
+
+      window.dispatchEvent(new Event("cartUpdated"));
+    } else {
+      console.error("Server error updating cart");
     }
-  };
+  } catch (error) {
+    console.error("Error updating cart:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleDecrement = async (productId) => {
     if (quantity <= 1) return;
@@ -82,11 +94,22 @@ function ProductDetailsPage() {
 
     setLoading(true);
     try {
-      await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
+      const res = await fetch(`${base_url}/api/cart/updateCartProduct/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: newQuantity }),
       });
+       if (res.ok) {
+      let localCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      localCart = localCart.map(item =>
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      );
+      localStorage.setItem("cartItems", JSON.stringify(localCart));
+
+      window.dispatchEvent(new Event("cartUpdated"));
+    } else {
+      console.error("Server error updating cart");
+    }
     } catch (err) {
       console.error("Error updating cart:", err);
     } finally {
