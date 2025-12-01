@@ -6,7 +6,7 @@ import Loader from "./loader";
 const base_url = import.meta.env.VITE_BASE_URL;
 
 function ProductDetailsPage() {
-  const { id } = useParams();
+  const { id } = useParams();  //destructure id from url
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState("");
