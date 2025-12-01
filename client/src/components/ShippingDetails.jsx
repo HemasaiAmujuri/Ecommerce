@@ -7,7 +7,7 @@ function ShippingDetails() {
   const [cartItems, setCartItems] = useState([]);
   const [confirmed, setConfirmed] = useState(false);
   const [message, setMessage] = useState();
-  const [loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,13 +16,13 @@ function ShippingDetails() {
 
   const userId = localStorage.getItem("userId") ?? "";
 
-  const base_url = import.meta.env.VITE_BASE_URL
+  const base_url = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     const fetchProducts = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await fetch(
           `${base_url}/api/cart/getCartByUserId/${userId}`
@@ -32,13 +32,13 @@ function ShippingDetails() {
         setCartItems(data.data);
       } catch (err) {
         console.log(err);
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [userId,base_url]);
+  }, [userId, base_url]);
 
   const getTotal = () => {
     return cartItems.reduce(
@@ -48,58 +48,70 @@ function ShippingDetails() {
     );
   };
 
+
   const handleConfirmOrder = async () => {
+  if (emailError) {
+    setMessage("Please enter a valid email address");
+    setTimeout(() => setMessage(""), 1500);
+    return;
+  }
 
-    setLoading(true)
-    if (!cartItems.length) {
-      setMessage("Please add items to your cart");
-      setTimeout(() => setMessage(""), 1500);
-      return;
-    }
+  if (!cartItems.length) {
+    setMessage("Please add items to your cart");
+    setTimeout(() => setMessage(""), 1500);
+    return;
+  }
 
-    if (!name || !email || !address || !userId) {
-      setMessage("Please fill all the shipping information");
-      setTimeout(() => setMessage(""), 1500);
-      return;
-    }
+  if (!name || !email || !address || !userId) {
+    setMessage("Please fill all the shipping information");
+    setTimeout(() => setMessage(""), 1500);
+    return;
+  }
 
-    try {
-      const shippingRes = await fetch(
-        `${base_url}/api/shipping/add-shippingInfo`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, address, userId }),
-        }
-      );
+  setLoading(true);
 
-      if (!shippingRes.ok)
-        throw new Error(`Shipping API error! status: ${shippingRes.status}`);
-      const shippingData = await shippingRes.json();
-      console.log("Shipping info saved:", shippingData);
+  try {
+    const shippingRes = await fetch(
+      `${base_url}/api/shipping/add-shippingInfo`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, address, userId }),
+      }
+    );
 
-      setCartItems([]);
-      localStorage.removeItem("cartItems");
+    if (!shippingRes.ok)
+      throw new Error(`Shipping API error! status: ${shippingRes.status}`);
+    const shippingData = await shippingRes.json();
+    console.log("Shipping info saved:", shippingData);
 
-      const cartRes = await fetch(
-        `${base_url}/api/cart/deleteCartItemsByuserId/${userId}`,
-        {
-          method: "DELETE",
-        }
-      );
+    setCartItems([]);
+    localStorage.removeItem("cartItems");
 
-      if (!cartRes.ok)
-        throw new Error(`Delete cart API error! status: ${cartRes.status}`);
-      const cartData = await cartRes.json();
-      console.log("Cart deleted:", cartData);
+    const cartRes = await fetch(
+      `${base_url}/api/cart/deleteCartItemsByuserId/${userId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-      setConfirmed(true);
-    } catch (err) {
-      console.error("Order confirmation error:", err.message);
-      setMessage("Something went wrong. Please try again.");
-      setTimeout(() => setMessage(""), 2000);
-    }
-  };
+    if (!cartRes.ok)
+      throw new Error(`Delete cart API error! status: ${cartRes.status}`);
+    const cartData = await cartRes.json();
+    console.log("Cart deleted:", cartData);
+
+    setConfirmed(true);
+  } catch (err) {
+    console.error("Order confirmation error:", err.message);
+    setMessage("Something went wrong. Please try again.");
+    setTimeout(() => setMessage(""), 2000);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   if (confirmed) {
     return (
@@ -137,23 +149,23 @@ function ShippingDetails() {
     );
   }
 
-
   const handleEmailChange = (e) => {
-  const value = e.target.value;
-  setEmail(value);
+    const value = e.target.value;
+    setEmail(value);
 
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!regex.test(value)) {
-    setEmailError("Please enter a valid email address (e.g., example@gmail.com)");
-  } else {
-    setEmailError("");
-  }
-};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(value)) {
+      setEmailError(
+        "Please enter a valid email address (e.g., example@gmail.com)"
+      );
+    } else {
+      setEmailError("");
+    }
+  };
 
   return (
     <div className="shipping-container">
       <div className="shipping-body">
-       
         <div className="shipping-left">
           <h2>Shipping Information</h2>
 
@@ -169,17 +181,17 @@ function ShippingDetails() {
           </div>
 
           <div className="form-group">
-  <label htmlFor="email">Email Address</label>
-  <input
-    type="email"
-    id="email"
-    placeholder="Enter your email"
-    value={email}
-    onChange={handleEmailChange}
-    required
-  />
-  {emailError && <small style={{ color: "red" }}>{emailError}</small>}
-</div>
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+            {emailError && <small style={{ color: "red" }}>{emailError}</small>}
+          </div>
 
           <div className="form-group">
             <label htmlFor="address">Shipping Address</label>
@@ -193,7 +205,6 @@ function ShippingDetails() {
           </div>
         </div>
 
-  
         <div className="shipping-right">
           <h2>Order Summary</h2>
           <div className="summary-box">
@@ -201,19 +212,17 @@ function ShippingDetails() {
               <p>No items in cart</p>
             ) : (
               <ul className="summary-list">
-  
                 {cartItems.map((product) => (
                   <li key={product.id} className="summary-item">
-
                     <img
                       src={product?.thumbnail || product?.img?.[0]}
                       alt={product?.title}
                       className="summary-image"
                     />
-                    <span className="summary-title">
-                      {product?.title}
+                    <span className="summary-title">{product?.title}</span>
+                    <span className="summary-qty">
+                      Qty: {product?.quantity}
                     </span>
-                    <span className="summary-qty">Qty: {product?.quantity}</span>
                     <span className="summary-cost">
                       ₹{Math.ceil(product?.price * product?.quantity)}
                     </span>
@@ -225,15 +234,13 @@ function ShippingDetails() {
           {cartItems.length > 0 && (
             <p className="summary-total">Total: ₹{getTotal()}</p>
           )}
-          <button className="confirm-button" onClick={handleConfirmOrder}>
-            Confirm Order
+          <button className="confirm-button" disabled={loading} onClick={handleConfirmOrder}>
+             {loading ? "Processing..." : "Confirm Order"}
           </button>
           {message && <div className="message-box">{message}</div>}
         </div>
       </div>
-      {loading && (
-        <Loader loading={loading} />
-      )}
+      {loading && <Loader loading={loading} />}
     </div>
   );
 }
